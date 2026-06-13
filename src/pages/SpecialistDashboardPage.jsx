@@ -152,7 +152,7 @@ function Sidebar({ onLogout, activeNav = 'Requests', onNavClick }) {
       {NAV.map((label) => {
         const active = label === activeNav
         return (
-          <div key={label} onClick={() => onNavClick?.(label)} style={{ height: 56, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', background: active ? c.surface : 'transparent', cursor: label === 'Documents' ? 'default' : 'pointer' }}>
+          <div key={label} onClick={() => onNavClick?.(label)} className="transition-colors duration-150" style={{ height: 56, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', background: active ? c.surface : 'transparent', cursor: label === 'Documents' ? 'default' : 'pointer' }}>
             <span style={{ fontFamily: quicksand, fontWeight: active ? 600 : 500, fontSize: 13, lineHeight: '18px', color: active ? c.textPri : c.textSec }}>{label}</span>
             {active && label === 'Requests' && <div style={{ width: 6, height: 6, borderRadius: '50%', background: c.green }} />}
             {label === 'Documents' && <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 10, color: c.textSec, background: c.surface, border: `1px solid ${c.border}`, borderRadius: 4, padding: '2px 6px', whiteSpace: 'nowrap' }}>Coming soon</span>}
@@ -166,7 +166,7 @@ function Sidebar({ onLogout, activeNav = 'Requests', onNavClick }) {
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 13, color: c.textPri, whiteSpace: 'nowrap' }}>Dr. Ivanova</span>
-          <span onClick={onLogout} style={{ fontFamily: inter, fontWeight: 400, fontSize: 11, color: c.textSec, whiteSpace: 'nowrap', cursor: 'pointer' }}>Log out</span>
+          <span onClick={onLogout} className="transition-opacity duration-150 hover:opacity-60" style={{ fontFamily: inter, fontWeight: 400, fontSize: 11, color: c.textSec, whiteSpace: 'nowrap', cursor: 'pointer' }}>Log out</span>
         </div>
       </div>
     </div>
@@ -181,7 +181,7 @@ function ListView({ onView }) {
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         <div style={{ display: 'flex', gap: 8 }}>
           {[['New (3)', true], ['In progress (2)', false], ['Closed', false]].map(([label, active]) => (
-            <div key={label} style={{ height: 34, display: 'flex', alignItems: 'center', padding: '0 12px', borderRadius: 6, background: active ? c.blue : c.surface, cursor: 'pointer' }}>
+            <div key={label} className="transition-colors duration-150" style={{ height: 34, display: 'flex', alignItems: 'center', padding: '0 12px', borderRadius: 6, background: active ? c.blue : c.surface, cursor: 'pointer' }}>
               <span style={{ fontFamily: inter, fontWeight: 400, fontSize: 11, lineHeight: '18px', color: active ? c.white : c.textSec, whiteSpace: 'nowrap' }}>{label}</span>
             </div>
           ))}
@@ -208,7 +208,7 @@ function ListView({ onView }) {
           const st = STATUS_STYLE[row.status]
           return (
             <div key={row.name}>
-              <div style={{ display: 'flex', alignItems: 'center', height: 64, background: c.white }}>
+              <div className="transition-colors duration-150 hover:bg-[#f5f5f7]" style={{ display: 'flex', alignItems: 'center', height: 64 }}>
                 <div style={{ width: 260, flexShrink: 0, padding: '0 16px', display: 'flex', alignItems: 'center', gap: 10 }}>
                   <PatientAvatar src={row.avatar} />
                   <span style={{ fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: c.textPri, whiteSpace: 'nowrap' }}>{row.name}</span>
@@ -232,7 +232,7 @@ function ListView({ onView }) {
                   )}
                 </div>
                 <div style={{ flex: 1, padding: '0 16px', display: 'flex', justifyContent: 'flex-end' }}>
-                  <button onClick={() => onView(row)} style={{ height: 36, padding: '0 20px', border: `1px solid ${c.border}`, borderRadius: 8, background: c.white, cursor: 'pointer' }}>
+                  <button onClick={() => onView(row)} className="transition-all duration-150 active:scale-[0.97]" style={{ height: 36, padding: '0 20px', border: `1px solid ${c.border}`, borderRadius: 8, background: c.white, cursor: 'pointer' }}>
                     <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.textPri }}>View</span>
                   </button>
                 </div>
@@ -253,7 +253,7 @@ function DetailView({ row, onContact, onDecision }) {
     <>
       {/* Scrollable content */}
       <div style={{ flex: 1, overflowY: 'auto', padding: '24px 32px', display: 'flex', flexDirection: 'column', gap: 16 }}>
-        <span onClick={() => history.back()} style={{ fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: c.textSec, cursor: 'pointer' }}>← Back to requests</span>
+        <span onClick={() => history.back()} className="transition-opacity duration-150 hover:opacity-70" style={{ fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: c.textSec, cursor: 'pointer' }}>← Back to requests</span>
 
         {/* Two columns */}
         <div style={{ display: 'flex', gap: 24, alignItems: 'flex-start' }}>
@@ -340,10 +340,10 @@ function DetailView({ row, onContact, onDecision }) {
 
       {/* Bottom action bar */}
       <div style={{ flexShrink: 0, borderTop: `1px solid ${c.border}`, padding: '10px 24px', display: 'flex', justifyContent: 'flex-end', gap: 12, background: c.white }}>
-        <button onClick={onContact} style={{ height: 44, padding: '0 16px', border: `1.5px solid ${c.border}`, borderRadius: 8, background: c.white, cursor: 'pointer' }}>
+        <button onClick={onContact} className="transition-all duration-150 active:scale-[0.98]" style={{ height: 44, padding: '0 16px', border: `1.5px solid ${c.border}`, borderRadius: 8, background: c.white, cursor: 'pointer' }}>
           <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.textPri }}>Contact patient</span>
         </button>
-        <button onClick={onDecision} style={{ height: 44, padding: '0 16px', border: 'none', borderRadius: 8, background: 'linear-gradient(180deg, #245dcf 0%, #122f69 100%)', cursor: 'pointer', minWidth: 214 }}>
+        <button onClick={onDecision} className="transition-all duration-150 active:scale-[0.98]" style={{ height: 44, padding: '0 16px', border: 'none', borderRadius: 8, background: 'linear-gradient(180deg, #245dcf 0%, #122f69 100%)', cursor: 'pointer', minWidth: 214 }}>
           <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.white }}>Resolve request</span>
         </button>
       </div>
@@ -398,10 +398,10 @@ function ConsultationClosedView({ row, onBackToRequests }) {
 
         {/* Actions */}
         <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <button onClick={onBackToRequests} style={{ height: 44, border: 'none', borderRadius: 8, background: 'linear-gradient(180deg, #245dcf 0%, #122f69 100%)', cursor: 'pointer', width: '100%' }}>
+          <button onClick={onBackToRequests} className="transition-all duration-150 active:scale-[0.98]" style={{ height: 44, border: 'none', borderRadius: 8, background: 'linear-gradient(180deg, #245dcf 0%, #122f69 100%)', cursor: 'pointer', width: '100%' }}>
             <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.white }}>Back to requests</span>
           </button>
-          <button style={{ height: 44, border: `1.5px solid ${c.border}`, borderRadius: 8, background: c.white, cursor: 'pointer', width: '100%' }}>
+          <button className="transition-all duration-150 active:scale-[0.98]" style={{ height: 44, border: `1.5px solid ${c.border}`, borderRadius: 8, background: c.white, cursor: 'pointer', width: '100%' }}>
             <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.textPri }}>View patient record</span>
           </button>
         </div>
@@ -422,7 +422,7 @@ function IssueDocumentView({ row, onBack, onBackToRequests, onSaveDraft }) {
   return (
     <>
       <div style={{ flex: 1, overflowY: 'auto', padding: '24px 32px', display: 'flex', flexDirection: 'column', gap: 24 }}>
-        <span onClick={onBack} style={{ fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: c.textSec, cursor: 'pointer' }}>← Back</span>
+        <span onClick={onBack} className="transition-opacity duration-150 hover:opacity-70" style={{ fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: c.textSec, cursor: 'pointer' }}>← Back</span>
 
         {/* Patient card */}
         <div style={{ width: 358, height: 72, border: `1px solid ${c.border}`, borderRadius: 10, display: 'flex', alignItems: 'center', gap: 12, padding: '0 16px', background: c.white }}>
@@ -446,7 +446,7 @@ function IssueDocumentView({ row, onBack, onBackToRequests, onSaveDraft }) {
                 {DOC_TYPES.map(t => {
                   const active = docType === t
                   return (
-                    <div key={t} onClick={() => setDocType(t)} style={{ padding: '6px 12px', borderRadius: 14, background: active ? c.blue : c.white, border: `1px solid ${active ? c.blue : c.surface}`, cursor: 'pointer' }}>
+                    <div key={t} onClick={() => setDocType(t)} className="transition-colors duration-150" style={{ padding: '6px 12px', borderRadius: 14, background: active ? c.blue : c.white, border: `1px solid ${active ? c.blue : c.surface}`, cursor: 'pointer' }}>
                       <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 12, color: active ? c.white : c.textSec }}>{t}</span>
                     </div>
                   )
@@ -502,17 +502,17 @@ function IssueDocumentView({ row, onBack, onBackToRequests, onSaveDraft }) {
 
       {/* Bottom action bar */}
       <div style={{ flexShrink: 0, borderTop: `1px solid ${c.border}`, padding: '10px 24px', display: 'flex', justifyContent: 'flex-end', gap: 12, background: c.white }}>
-        <button onClick={() => { setProcessing(true); setTimeout(() => onSaveDraft?.(), 2000) }} style={{ height: 44, padding: '0 16px', border: `1.5px solid ${c.border}`, borderRadius: 8, background: c.white, cursor: 'pointer' }}>
+        <button onClick={() => { setProcessing(true); setTimeout(() => onSaveDraft?.(), 2000) }} className="transition-all duration-150 active:scale-[0.98]" style={{ height: 44, padding: '0 16px', border: `1.5px solid ${c.border}`, borderRadius: 8, background: c.white, cursor: 'pointer' }}>
           <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.textPri }}>Save draft</span>
         </button>
-        <button onClick={() => { setProcessing(true); setTimeout(() => onBackToRequests?.(), 2000) }} style={{ height: 44, padding: '0 24px', border: 'none', borderRadius: 8, background: 'linear-gradient(180deg, #245dcf 0%, #122f69 100%)', cursor: 'pointer' }}>
+        <button onClick={() => { setProcessing(true); setTimeout(() => onBackToRequests?.(), 2000) }} className="transition-all duration-150 active:scale-[0.98]" style={{ height: 44, padding: '0 24px', border: 'none', borderRadius: 8, background: 'linear-gradient(180deg, #245dcf 0%, #122f69 100%)', cursor: 'pointer' }}>
           <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.white }}>Generate &amp; send</span>
         </button>
       </div>
 
       {/* Processing overlay */}
       {processing && (
-        <div style={{ position: 'fixed', inset: 0, backdropFilter: 'blur(3px)', background: 'rgba(255,255,255,0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50 }}>
+        <div className="animate-in fade-in duration-150" style={{ position: 'fixed', inset: 0, backdropFilter: 'blur(3px)', background: 'rgba(255,255,255,0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50 }}>
           <div style={{ background: c.white, borderRadius: 12, padding: '14px 24px', boxShadow: '0 4px 24px rgba(0,0,0,0.12)', display: 'flex', alignItems: 'center', gap: 10 }}>
             <div style={{ width: 16, height: 16, borderRadius: '50%', border: `2px solid ${c.border}`, borderTopColor: c.blue, animation: 'spin 0.8s linear infinite', flexShrink: 0 }} />
             <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 14, color: c.textPri }}>Processing...</span>
@@ -548,7 +548,7 @@ function OfferSlotsView({ row, onBack }) {
   return (
     <>
       <div style={{ flex: 1, overflowY: 'auto', padding: '24px 32px', display: 'flex', flexDirection: 'column', gap: 24 }}>
-        <span onClick={onBack} style={{ fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: c.textSec, cursor: 'pointer' }}>← Back</span>
+        <span onClick={onBack} className="transition-opacity duration-150 hover:opacity-70" style={{ fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: c.textSec, cursor: 'pointer' }}>← Back</span>
 
         {/* Title */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -595,6 +595,7 @@ function OfferSlotsView({ row, onBack }) {
                   <div
                     key={day}
                     onClick={() => available && toggleSlot(key)}
+                    className="transition-colors duration-150"
                     style={{
                       width: 180, flexShrink: 0, padding: '10px 0', display: 'flex', justifyContent: 'center', alignItems: 'center',
                       background: isSelected ? c.blue : available ? c.surface : c.white,
@@ -615,10 +616,10 @@ function OfferSlotsView({ row, onBack }) {
 
       {/* Bottom action bar */}
       <div style={{ flexShrink: 0, borderTop: `1px solid ${c.border}`, padding: '10px 24px', display: 'flex', justifyContent: 'flex-end', gap: 12, background: c.white }}>
-        <button onClick={onBack} style={{ height: 44, padding: '0 16px', border: `1.5px solid ${c.border}`, borderRadius: 8, background: c.white, cursor: 'pointer' }}>
+        <button onClick={onBack} className="transition-all duration-150 active:scale-[0.98]" style={{ height: 44, padding: '0 16px', border: `1.5px solid ${c.border}`, borderRadius: 8, background: c.white, cursor: 'pointer' }}>
           <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.textPri }}>Cancel</span>
         </button>
-        <button style={{ height: 44, padding: '0 24px', border: 'none', borderRadius: 8, background: 'linear-gradient(180deg, #245dcf 0%, #122f69 100%)', cursor: 'pointer' }}>
+        <button className="transition-all duration-150 active:scale-[0.98]" style={{ height: 44, padding: '0 24px', border: 'none', borderRadius: 8, background: 'linear-gradient(180deg, #245dcf 0%, #122f69 100%)', cursor: 'pointer' }}>
           <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.white }}>Offer selected slots</span>
         </button>
       </div>
@@ -638,7 +639,7 @@ function RecommendationsView({ row, onBack, onSubmit, onSaveDraft }) {
   return (
     <>
       <div style={{ flex: 1, overflowY: 'auto', padding: '24px 32px', display: 'flex', flexDirection: 'column', gap: 16 }}>
-        <span onClick={onBack} style={{ fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: c.textSec, cursor: 'pointer' }}>← Back</span>
+        <span onClick={onBack} className="transition-opacity duration-150 hover:opacity-70" style={{ fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: c.textSec, cursor: 'pointer' }}>← Back</span>
 
         {/* Two-column layout */}
         <div style={{ display: 'flex', gap: 24, alignItems: 'flex-start' }}>
@@ -670,7 +671,7 @@ function RecommendationsView({ row, onBack, onSubmit, onSaveDraft }) {
               {FOLLOW_UP_OPTIONS.map(opt => {
                 const active = followUp === opt
                 return (
-                  <div key={opt} onClick={() => setFollowUp(opt)} style={{ padding: '6px 12px', borderRadius: 14, background: active ? c.blue : c.white, border: `1px solid ${active ? c.blue : c.border}`, cursor: 'pointer' }}>
+                  <div key={opt} onClick={() => setFollowUp(opt)} className="transition-colors duration-150" style={{ padding: '6px 12px', borderRadius: 14, background: active ? c.blue : c.white, border: `1px solid ${active ? c.blue : c.border}`, cursor: 'pointer' }}>
                     <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 12, color: active ? c.white : c.textSec }}>{opt}</span>
                   </div>
                 )
@@ -713,17 +714,17 @@ function RecommendationsView({ row, onBack, onSubmit, onSaveDraft }) {
 
       {/* Bottom action bar */}
       <div style={{ flexShrink: 0, borderTop: `1px solid ${c.border}`, padding: '10px 24px', display: 'flex', justifyContent: 'flex-end', gap: 12, background: c.white }}>
-        <button onClick={() => { setProcessing(true); setTimeout(() => onSaveDraft?.(), 2000) }} style={{ height: 44, padding: '0 16px', border: `1.5px solid ${c.border}`, borderRadius: 8, background: c.white, cursor: 'pointer' }}>
+        <button onClick={() => { setProcessing(true); setTimeout(() => onSaveDraft?.(), 2000) }} className="transition-all duration-150 active:scale-[0.98]" style={{ height: 44, padding: '0 16px', border: `1.5px solid ${c.border}`, borderRadius: 8, background: c.white, cursor: 'pointer' }}>
           <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.textPri }}>Save draft</span>
         </button>
-        <button onClick={onSubmit} style={{ height: 44, padding: '0 16px', border: 'none', borderRadius: 8, background: 'linear-gradient(180deg, #245dcf 0%, #122f69 100%)', cursor: 'pointer', minWidth: 120 }}>
+        <button onClick={onSubmit} className="transition-all duration-150 active:scale-[0.98]" style={{ height: 44, padding: '0 16px', border: 'none', borderRadius: 8, background: 'linear-gradient(180deg, #245dcf 0%, #122f69 100%)', cursor: 'pointer', minWidth: 120 }}>
           <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.white }}>Submit</span>
         </button>
       </div>
 
       {/* Processing overlay */}
       {processing && (
-        <div style={{ position: 'fixed', inset: 0, backdropFilter: 'blur(3px)', background: 'rgba(255,255,255,0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50 }}>
+        <div className="animate-in fade-in duration-150" style={{ position: 'fixed', inset: 0, backdropFilter: 'blur(3px)', background: 'rgba(255,255,255,0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50 }}>
           <div style={{ background: c.white, borderRadius: 12, padding: '14px 24px', boxShadow: '0 4px 24px rgba(0,0,0,0.12)', display: 'flex', alignItems: 'center', gap: 10 }}>
             <div style={{ width: 16, height: 16, borderRadius: '50%', border: `2px solid ${c.border}`, borderTopColor: c.blue, animation: 'spin 0.8s linear infinite', flexShrink: 0 }} />
             <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 14, color: c.textPri }}>Processing...</span>
@@ -746,7 +747,7 @@ function DecisionView({ onBack, onContinue, onOfferSlots, onIssueDocument }) {
   const [selected, setSelected] = useState('self-care')
   return (
     <div style={{ flex: 1, overflowY: 'auto', padding: '24px 32px', display: 'flex', flexDirection: 'column', gap: 16 }}>
-      <span onClick={onBack} style={{ fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: c.textSec, cursor: 'pointer' }}>← Back to request</span>
+      <span onClick={onBack} className="transition-opacity duration-150 hover:opacity-70" style={{ fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: c.textSec, cursor: 'pointer' }}>← Back to request</span>
       {/* Centered card */}
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div style={{ width: 484, border: `1px solid ${c.border}`, borderRadius: 12, padding: 32, display: 'flex', flexDirection: 'column', gap: 16, background: c.white }}>
@@ -762,9 +763,9 @@ function DecisionView({ onBack, onContinue, onOfferSlots, onIssueDocument }) {
               return (
                 <div key={opt.id}>
                   {i > 0 && <div style={{ height: 1, background: c.border }} />}
-                  <div onClick={() => setSelected(opt.id)} style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '16px 0', cursor: 'pointer' }}>
+                  <div onClick={() => setSelected(opt.id)} className="transition-opacity duration-100 hover:opacity-80" style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '16px 0', cursor: 'pointer' }}>
                     {/* Radio */}
-                    <div style={{ width: 20, height: 20, borderRadius: 10, flexShrink: 0, border: `2px solid ${active ? c.blue : c.border}`, background: active ? c.blue : c.white, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div className="transition-colors duration-150" style={{ width: 20, height: 20, borderRadius: 10, flexShrink: 0, border: `2px solid ${active ? c.blue : c.border}`, background: active ? c.blue : c.white, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       {active && <div style={{ width: 8, height: 8, borderRadius: 4, background: c.white }} />}
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
@@ -778,10 +779,10 @@ function DecisionView({ onBack, onContinue, onOfferSlots, onIssueDocument }) {
           </div>
           {/* Actions */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <button onClick={() => { if (selected === 'self-care') onContinue?.(); else if (selected === 'visit') onOfferSlots?.(); else if (selected === 'document') onIssueDocument?.(); }} style={{ height: 44, border: 'none', borderRadius: 8, background: 'linear-gradient(180deg, #245dcf 0%, #122f69 100%)', cursor: 'pointer', width: '100%' }}>
+            <button onClick={() => { if (selected === 'self-care') onContinue?.(); else if (selected === 'visit') onOfferSlots?.(); else if (selected === 'document') onIssueDocument?.(); }} className="transition-all duration-150 active:scale-[0.98]" style={{ height: 44, border: 'none', borderRadius: 8, background: 'linear-gradient(180deg, #245dcf 0%, #122f69 100%)', cursor: 'pointer', width: '100%' }}>
               <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.white }}>Continue</span>
             </button>
-            <button onClick={onBack} style={{ height: 44, border: `1.5px solid ${c.border}`, borderRadius: 8, background: c.white, cursor: 'pointer', width: '100%' }}>
+            <button onClick={onBack} className="transition-all duration-150 active:scale-[0.98]" style={{ height: 44, border: `1.5px solid ${c.border}`, borderRadius: 8, background: c.white, cursor: 'pointer', width: '100%' }}>
               <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.textPri }}>Cancel</span>
             </button>
           </div>
@@ -797,7 +798,7 @@ const QUICK_REPLIES = ['Any allergies?', 'How long exactly?', 'Any other symptom
 function MessagesView({ row }) {
   return (
     <div style={{ flex: 1, overflowY: 'auto', padding: '24px 32px', display: 'flex', flexDirection: 'column', gap: 16 }}>
-      <span onClick={() => history.back()} style={{ fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: c.textSec, cursor: 'pointer' }}>← Back</span>
+      <span onClick={() => history.back()} className="transition-opacity duration-150 hover:opacity-70" style={{ fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: c.textSec, cursor: 'pointer' }}>← Back</span>
 
       {/* Patient card */}
       {row && (
@@ -837,7 +838,7 @@ function MessagesView({ row }) {
         <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 10, letterSpacing: '0.8px', textTransform: 'uppercase', color: c.textSec }}>QUICK REPLIES</span>
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
           {QUICK_REPLIES.map(r => (
-            <div key={r} style={{ padding: '4px 10px', borderRadius: 20, background: c.surface, border: `1px solid ${c.border}`, cursor: 'pointer' }}>
+            <div key={r} className="transition-all duration-150 active:scale-[0.97]" style={{ padding: '4px 10px', borderRadius: 20, background: c.surface, border: `1px solid ${c.border}`, cursor: 'pointer' }}>
               <span style={{ fontFamily: inter, fontWeight: 400, fontSize: 12, color: c.textPri }}>{r}</span>
             </div>
           ))}
@@ -849,7 +850,7 @@ function MessagesView({ row }) {
         <div style={{ flex: 1, height: 44, padding: '0 12px', background: c.surface, border: `1px solid ${c.border}`, borderRadius: 8, display: 'flex', alignItems: 'center' }}>
           <span style={{ fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: c.textSec }}>Type a message...</span>
         </div>
-        <button style={{ width: 135, height: 44, border: 'none', borderRadius: 8, background: 'linear-gradient(180deg, #245dcf 0%, #122f69 100%)', cursor: 'pointer' }}>
+        <button className="transition-all duration-150 active:scale-[0.98]" style={{ width: 135, height: 44, border: 'none', borderRadius: 8, background: 'linear-gradient(180deg, #245dcf 0%, #122f69 100%)', cursor: 'pointer' }}>
           <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.white }}>Send</span>
         </button>
       </div>
@@ -936,19 +937,22 @@ export default function SpecialistDashboardPage({ onLogout }) {
         <div style={{ height: 64, flexShrink: 0, display: 'flex', alignItems: 'center', padding: '0 24px', borderBottom: `1px solid ${c.border}`, background: c.white }}>
           <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 20, color: c.textPri }}>{TOP_BAR_TITLE[view]}</span>
         </div>
-        {view === 'list'     && <ListView onView={openDetail} />}
-        {view === 'detail'   && <DetailView row={selectedRow} onContact={openMessages} onDecision={openDecision} />}
-        {view === 'messages' && <MessagesView row={selectedRow} />}
-        {view === 'decision'         && <DecisionView onBack={() => history.back()} onContinue={openRecommendations} onOfferSlots={openSlots} onIssueDocument={openIssueDoc} />}
-        {view === 'issuedoc'         && <IssueDocumentView row={selectedRow} onBack={() => history.back()} onBackToRequests={() => { backToList(); showToast('Document generated successfully', 'The document has been sent to the patient.') }} onSaveDraft={() => { backToList(); showToast('Draft saved', 'You can continue editing this document later.') }} />}
-        {view === 'slots'            && <OfferSlotsView row={selectedRow} onBack={() => history.back()} />}
-        {view === 'recommendations'  && <RecommendationsView row={selectedRow} onBack={() => history.back()} onSubmit={openClosed} onSaveDraft={() => { backToList(); showToast('Draft saved', 'You can continue editing this document later.') }} />}
-        {view === 'closed'           && <ConsultationClosedView row={selectedRow} onBackToRequests={backToList} />}
+        {/* View container — keyed so each view transition triggers fade-in */}
+        <div key={view} className="animate-in fade-in duration-200" style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'hidden' }}>
+          {view === 'list'     && <ListView onView={openDetail} />}
+          {view === 'detail'   && <DetailView row={selectedRow} onContact={openMessages} onDecision={openDecision} />}
+          {view === 'messages' && <MessagesView row={selectedRow} />}
+          {view === 'decision'         && <DecisionView onBack={() => history.back()} onContinue={openRecommendations} onOfferSlots={openSlots} onIssueDocument={openIssueDoc} />}
+          {view === 'issuedoc'         && <IssueDocumentView row={selectedRow} onBack={() => history.back()} onBackToRequests={() => { backToList(); showToast('Document generated successfully', 'The document has been sent to the patient.') }} onSaveDraft={() => { backToList(); showToast('Draft saved', 'You can continue editing this document later.') }} />}
+          {view === 'slots'            && <OfferSlotsView row={selectedRow} onBack={() => history.back()} />}
+          {view === 'recommendations'  && <RecommendationsView row={selectedRow} onBack={() => history.back()} onSubmit={openClosed} onSaveDraft={() => { backToList(); showToast('Draft saved', 'You can continue editing this document later.') }} />}
+          {view === 'closed'           && <ConsultationClosedView row={selectedRow} onBackToRequests={backToList} />}
+        </div>
       </div>
 
       {/* Toast */}
       {toast && (
-        <div style={{ position: 'fixed', bottom: 24, right: 24, zIndex: 200, width: 360, background: c.surface, border: `1px solid ${c.border}`, borderRadius: 10, padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 2, boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
+        <div className="animate-in slide-in-from-bottom-4 fade-in duration-300" style={{ position: 'fixed', bottom: 24, right: 24, zIndex: 200, width: 360, background: c.surface, border: `1px solid ${c.border}`, borderRadius: 10, padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 2, boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
               <circle cx="8" cy="8" r="7" stroke="#1d9e75" strokeWidth="1.5" />

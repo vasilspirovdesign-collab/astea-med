@@ -34,7 +34,7 @@ export default function SplashPage({ onSelect }) {
   const [hovered, setHovered] = useState(null)
 
   return (
-    <div style={{ ...base, position: 'relative', display: 'flex', height: '100dvh', flexDirection: 'column', overflow: 'hidden', background: '#f3f3f3' }}>
+    <div className="animate-in fade-in duration-500" style={{ ...base, position: 'relative', display: 'flex', height: '100dvh', flexDirection: 'column', overflow: 'hidden', background: '#f3f3f3' }}>
 
       {/* Brand */}
       <div style={{ ...base, flexShrink: 0, padding: 'clamp(16px, 3vw, 40px) clamp(24px, 5vw, 64px) 0' }}>
