@@ -148,7 +148,7 @@ export default function PatientHomePage({ onBack }) {
         <div style={{ height: 1, background: c.border, flexShrink: 0 }} />
 
         {/* Scrollable content */}
-        <div style={{ flex: 1, overflowY: 'auto' }}>
+        <div className="no-scrollbar" style={{ flex: 1, overflowY: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: '20px 16px 8px' }}>
 
             {/* Greeting */}
