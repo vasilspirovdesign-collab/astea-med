@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import SplashPage from './pages/SplashPage'
 import PatientHomePage from './pages/PatientHomePage'
+import SpecialistDashboardPage from './pages/SpecialistDashboardPage'
 import PhoneMockup from './components/PhoneMockup'
 
 export default function App() {
@@ -31,9 +32,14 @@ export default function App() {
     </PhoneMockup>
   )
 
-  return (
-    <div style={{ display: 'flex', height: '100dvh', alignItems: 'center', justifyContent: 'center', background: '#f3f3f3' }}>
-      <p style={{ fontSize: 24, fontWeight: 600 }}>Specialist dashboard — coming soon</p>
-    </div>
+  function logout() {
+    history.replaceState(null, '')
+    setPersona(null)
+  }
+
+  if (persona === 'specialist') return (
+    <SpecialistDashboardPage onBack={goBack} onLogout={logout} />
   )
+
+  return null
 }
