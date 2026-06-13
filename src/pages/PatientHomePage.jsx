@@ -165,7 +165,7 @@ export default function PatientHomePage({ onBack }) {
               <SectionHeader label="Quick Actions" />
               <div style={{ display: 'flex', gap: 8 }}>
                 {QUICK_ACTIONS.map((qa) => (
-                  <button key={qa.label} style={{ ...card, borderRadius: 8, flex: 1, height: 88, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, padding: 6, cursor: 'pointer' }}>
+                  <button key={qa.label} className="transition-all duration-150 active:scale-[0.96]" style={{ ...card, borderRadius: 8, flex: 1, height: 88, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, padding: 6, cursor: 'pointer' }}>
                     <div style={{ width: 32, height: 32, background: c.surface, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                       {qa.icon}
                     </div>
@@ -264,7 +264,7 @@ export default function PatientHomePage({ onBack }) {
 
         {/* Bottom CTA */}
         <div style={{ flexShrink: 0, padding: '12px 16px 24px', background: c.white, borderTop: `1px solid ${c.border}` }}>
-          <button style={{ width: '100%', height: 44, background: 'linear-gradient(180deg, #245dcf 0%, #122f69 100%)', borderRadius: 8, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <button className="transition-all duration-150 active:scale-[0.98]" style={{ width: '100%', height: 44, background: 'linear-gradient(180deg, #245dcf 0%, #122f69 100%)', borderRadius: 8, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <span style={L2({ color: c.white, textAlign: 'center' })}>New request</span>
           </button>
         </div>

@@ -134,7 +134,7 @@ function PatientAvatar({ src, size = 32, radius = 16 }) {
 // ─── Sidebar ───────────────────────────────────────────────────────────────────
 const NAV = ['Requests', 'Schedule', 'Patients', 'Messages', 'Documents']
 
-function Sidebar({ onLogout, activeNav = 'Requests' }) {
+function Sidebar({ onLogout, activeNav = 'Requests', onNavClick }) {
   return (
     <div style={{ width: 240, flexShrink: 0, height: '100%', display: 'flex', flexDirection: 'column', borderRight: `1px solid ${c.border}`, background: c.white }}>
       <div style={{ height: 64, flexShrink: 0, display: 'flex', alignItems: 'center', padding: '0 16px' }}>
@@ -152,9 +152,10 @@ function Sidebar({ onLogout, activeNav = 'Requests' }) {
       {NAV.map((label) => {
         const active = label === activeNav
         return (
-          <div key={label} style={{ height: 56, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', background: active ? c.surface : 'transparent', cursor: 'pointer' }}>
+          <div key={label} onClick={() => onNavClick?.(label)} className="transition-colors duration-150" style={{ height: 56, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', background: active ? c.surface : 'transparent', cursor: label === 'Documents' ? 'default' : 'pointer' }}>
             <span style={{ fontFamily: quicksand, fontWeight: active ? 600 : 500, fontSize: 13, lineHeight: '18px', color: active ? c.textPri : c.textSec }}>{label}</span>
             {active && label === 'Requests' && <div style={{ width: 6, height: 6, borderRadius: '50%', background: c.green }} />}
+            {label === 'Documents' && <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 10, color: c.textSec, background: c.surface, border: `1px solid ${c.border}`, borderRadius: 4, padding: '2px 6px', whiteSpace: 'nowrap' }}>Coming soon</span>}
           </div>
         )
       })}
@@ -165,7 +166,7 @@ function Sidebar({ onLogout, activeNav = 'Requests' }) {
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 13, color: c.textPri, whiteSpace: 'nowrap' }}>Dr. Ivanova</span>
-          <span onClick={onLogout} style={{ fontFamily: inter, fontWeight: 400, fontSize: 11, color: c.textSec, whiteSpace: 'nowrap', cursor: 'pointer' }}>Log out</span>
+          <span onClick={onLogout} className="transition-opacity duration-150 hover:opacity-60" style={{ fontFamily: inter, fontWeight: 400, fontSize: 11, color: c.textSec, whiteSpace: 'nowrap', cursor: 'pointer' }}>Log out</span>
         </div>
       </div>
     </div>
@@ -180,7 +181,7 @@ function ListView({ onView }) {
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         <div style={{ display: 'flex', gap: 8 }}>
           {[['New (3)', true], ['In progress (2)', false], ['Closed', false]].map(([label, active]) => (
-            <div key={label} style={{ height: 34, display: 'flex', alignItems: 'center', padding: '0 12px', borderRadius: 6, background: active ? c.blue : c.surface, cursor: 'pointer' }}>
+            <div key={label} className="transition-colors duration-150" style={{ height: 34, display: 'flex', alignItems: 'center', padding: '0 12px', borderRadius: 6, background: active ? c.blue : c.surface, cursor: 'pointer' }}>
               <span style={{ fontFamily: inter, fontWeight: 400, fontSize: 11, lineHeight: '18px', color: active ? c.white : c.textSec, whiteSpace: 'nowrap' }}>{label}</span>
             </div>
           ))}
@@ -207,7 +208,7 @@ function ListView({ onView }) {
           const st = STATUS_STYLE[row.status]
           return (
             <div key={row.name}>
-              <div style={{ display: 'flex', alignItems: 'center', height: 64, background: c.white }}>
+              <div className="transition-colors duration-150 hover:bg-[#f5f5f7]" style={{ display: 'flex', alignItems: 'center', height: 64 }}>
                 <div style={{ width: 260, flexShrink: 0, padding: '0 16px', display: 'flex', alignItems: 'center', gap: 10 }}>
                   <PatientAvatar src={row.avatar} />
                   <span style={{ fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: c.textPri, whiteSpace: 'nowrap' }}>{row.name}</span>
@@ -231,7 +232,7 @@ function ListView({ onView }) {
                   )}
                 </div>
                 <div style={{ flex: 1, padding: '0 16px', display: 'flex', justifyContent: 'flex-end' }}>
-                  <button onClick={() => onView(row)} style={{ height: 36, padding: '0 20px', border: `1px solid ${c.border}`, borderRadius: 8, background: c.white, cursor: 'pointer' }}>
+                  <button onClick={() => onView(row)} className="transition-all duration-150 active:scale-[0.97]" style={{ height: 36, padding: '0 20px', border: `1px solid ${c.border}`, borderRadius: 8, background: c.white, cursor: 'pointer' }}>
                     <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.textPri }}>View</span>
                   </button>
                 </div>
@@ -252,7 +253,7 @@ function DetailView({ row, onContact, onDecision }) {
     <>
       {/* Scrollable content */}
       <div style={{ flex: 1, overflowY: 'auto', padding: '24px 32px', display: 'flex', flexDirection: 'column', gap: 16 }}>
-        <span onClick={() => history.back()} style={{ fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: c.textSec, cursor: 'pointer' }}>← Back to requests</span>
+        <span onClick={() => history.back()} className="transition-opacity duration-150 hover:opacity-70" style={{ fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: c.textSec, cursor: 'pointer' }}>← Back to requests</span>
 
         {/* Two columns */}
         <div style={{ display: 'flex', gap: 24, alignItems: 'flex-start' }}>
@@ -339,11 +340,287 @@ function DetailView({ row, onContact, onDecision }) {
 
       {/* Bottom action bar */}
       <div style={{ flexShrink: 0, borderTop: `1px solid ${c.border}`, padding: '10px 24px', display: 'flex', justifyContent: 'flex-end', gap: 12, background: c.white }}>
-        <button onClick={onContact} style={{ height: 44, padding: '0 16px', border: `1.5px solid ${c.border}`, borderRadius: 8, background: c.white, cursor: 'pointer' }}>
+        <button onClick={onContact} className="transition-all duration-150 active:scale-[0.98]" style={{ height: 44, padding: '0 16px', border: `1.5px solid ${c.border}`, borderRadius: 8, background: c.white, cursor: 'pointer' }}>
           <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.textPri }}>Contact patient</span>
         </button>
-        <button onClick={onDecision} style={{ height: 44, padding: '0 16px', border: 'none', borderRadius: 8, background: 'linear-gradient(180deg, #245dcf 0%, #122f69 100%)', cursor: 'pointer', minWidth: 214 }}>
-          <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.white }}>Make decision</span>
+        <button onClick={onDecision} className="transition-all duration-150 active:scale-[0.98]" style={{ height: 44, padding: '0 16px', border: 'none', borderRadius: 8, background: 'linear-gradient(180deg, #245dcf 0%, #122f69 100%)', cursor: 'pointer', minWidth: 214 }}>
+          <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.white }}>Resolve request</span>
+        </button>
+      </div>
+    </>
+  )
+}
+
+// ─── Consultation closed view ──────────────────────────────────────────────────
+function ConsultationClosedView({ row, onBackToRequests }) {
+  return (
+    <div style={{ flex: 1, overflowY: 'auto', padding: '24px 32px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ width: 484, border: `1px solid ${c.border}`, borderRadius: 8, padding: 32, display: 'flex', flexDirection: 'column', gap: 16, alignItems: 'center', background: c.white }}>
+
+        {/* Icon circle */}
+        <div style={{ width: 72, height: 72, borderRadius: 40, border: `1px solid #209c8b`, background: c.white, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M9 12l2 2 4-4" stroke="#209c8b" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M8 4H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-2" stroke="#209c8b" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M8 4a2 2 0 012-2h4a2 2 0 012 2v0a2 2 0 01-2 2h-4a2 2 0 01-2-2z" stroke="#209c8b" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </div>
+
+        {/* Title */}
+        <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 20, color: c.textPri, textAlign: 'center' }}>Consultation closed</span>
+
+        {/* Success badge */}
+        <div style={{ padding: '3px 8px', borderRadius: 4, background: c.greenTint, border: `1px solid ${c.green}` }}>
+          <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 12, color: c.green }}>Success</span>
+        </div>
+
+        {/* Patient card */}
+        <div style={{ width: '100%', height: 72, border: `1px solid ${c.border}`, borderRadius: 10, display: 'flex', alignItems: 'center', gap: 12, padding: '0 16px', background: c.white }}>
+          <PatientAvatar src={row.avatar} size={40} radius={22} />
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2, overflow: 'hidden' }}>
+            <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.textPri, whiteSpace: 'nowrap' }}>{row.name}</span>
+            <span style={{ fontFamily: inter, fontWeight: 400, fontSize: 11, lineHeight: '18px', color: c.textSec, whiteSpace: 'nowrap' }}>{row.type} · active</span>
+          </div>
+        </div>
+
+        {/* Summary table */}
+        <div style={{ width: '100%', border: `1px solid ${c.border}`, borderRadius: 8, overflow: 'hidden' }}>
+          {row.details.map((d, i) => (
+            <div key={d.label}>
+              {i > 0 && <div style={{ height: 1, background: c.border }} />}
+              <div style={{ padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 4 }}>
+                <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 10, letterSpacing: '0.8px', textTransform: 'uppercase', color: c.textSec }}>{d.label}</span>
+                <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 14, color: c.textPri }}>{d.value}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Actions */}
+        <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <button onClick={onBackToRequests} className="transition-all duration-150 active:scale-[0.98]" style={{ height: 44, border: 'none', borderRadius: 8, background: 'linear-gradient(180deg, #245dcf 0%, #122f69 100%)', cursor: 'pointer', width: '100%' }}>
+            <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.white }}>Back to requests</span>
+          </button>
+          <button className="transition-all duration-150 active:scale-[0.98]" style={{ height: 44, border: `1.5px solid ${c.border}`, borderRadius: 8, background: c.white, cursor: 'pointer', width: '100%' }}>
+            <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.textPri }}>View patient record</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ─── Issue document view ───────────────────────────────────────────────────────
+const DOC_TYPES = ['Sick leave', 'Referral', 'Prescription']
+
+function IssueDocumentView({ row, onBack, onBackToRequests, onSaveDraft }) {
+  const [docType,    setDocType]    = useState('Sick leave')
+  const [diagnosis,  setDiagnosis]  = useState('Viral upper respiratory infection')
+  const [fromDate,   setFromDate]   = useState('June 11, 2026')
+  const [toDate,     setToDate]     = useState('June 14, 2026')
+  const [processing, setProcessing] = useState(false)
+  return (
+    <>
+      <div style={{ flex: 1, overflowY: 'auto', padding: '24px 32px', display: 'flex', flexDirection: 'column', gap: 24 }}>
+        <span onClick={onBack} className="transition-opacity duration-150 hover:opacity-70" style={{ fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: c.textSec, cursor: 'pointer' }}>← Back</span>
+
+        {/* Patient card */}
+        <div style={{ width: 358, height: 72, border: `1px solid ${c.border}`, borderRadius: 10, display: 'flex', alignItems: 'center', gap: 12, padding: '0 16px', background: c.white }}>
+          <PatientAvatar src={row.avatar} size={40} radius={22} />
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2, overflow: 'hidden' }}>
+            <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.textPri, whiteSpace: 'nowrap' }}>{row.name}</span>
+            <span style={{ fontFamily: inter, fontWeight: 400, fontSize: 11, lineHeight: '18px', color: c.textSec, whiteSpace: 'nowrap' }}>{row.type} · active</span>
+          </div>
+        </div>
+
+        <div style={{ height: 1, background: c.border }} />
+
+        {/* Centered form card */}
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <div style={{ width: 484, border: `1px solid ${c.border}`, borderRadius: 8, padding: 32, display: 'flex', flexDirection: 'column', gap: 16 }}>
+
+            {/* Document type */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 10, letterSpacing: '0.8px', textTransform: 'uppercase', color: c.textSec }}>DOCUMENT TYPE</span>
+              <div style={{ display: 'flex', gap: 8 }}>
+                {DOC_TYPES.map(t => {
+                  const active = docType === t
+                  return (
+                    <div key={t} onClick={() => setDocType(t)} className="transition-colors duration-150" style={{ padding: '6px 12px', borderRadius: 14, background: active ? c.blue : c.white, border: `1px solid ${active ? c.blue : c.surface}`, cursor: 'pointer' }}>
+                      <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 12, color: active ? c.white : c.textSec }}>{t}</span>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+
+            <div style={{ height: 1, background: c.border }} />
+
+            {/* Fields */}
+            {/* Patient — read-only */}
+            <div style={{ padding: '4px 0', display: 'flex', flexDirection: 'column', gap: 4 }}>
+              <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 10, letterSpacing: '0.8px', textTransform: 'uppercase', color: c.textSec }}>PATIENT</span>
+              <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 14, color: c.textPri }}>{row.name}</span>
+            </div>
+
+            <div style={{ height: 1, background: c.border }} />
+
+            {/* Diagnosis — editable */}
+            <div style={{ padding: '4px 0', display: 'flex', flexDirection: 'column', gap: 4 }}>
+              <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 10, letterSpacing: '0.8px', textTransform: 'uppercase', color: c.textSec }}>DIAGNOSIS</span>
+              <input value={diagnosis} onChange={e => setDiagnosis(e.target.value)} style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 14, color: c.textPri, border: 'none', outline: 'none', background: 'transparent', width: '100%', padding: 0 }} />
+            </div>
+
+            <div style={{ height: 1, background: c.border }} />
+
+            {/* From — editable */}
+            <div style={{ padding: '4px 0', display: 'flex', flexDirection: 'column', gap: 4 }}>
+              <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 10, letterSpacing: '0.8px', textTransform: 'uppercase', color: c.textSec }}>FROM</span>
+              <input value={fromDate} onChange={e => setFromDate(e.target.value)} style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 14, color: c.textPri, border: 'none', outline: 'none', background: 'transparent', width: '100%', padding: 0 }} />
+            </div>
+
+            <div style={{ height: 1, background: c.border }} />
+
+            {/* To — editable */}
+            <div style={{ padding: '4px 0', display: 'flex', flexDirection: 'column', gap: 4 }}>
+              <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 10, letterSpacing: '0.8px', textTransform: 'uppercase', color: c.textSec }}>TO</span>
+              <input value={toDate} onChange={e => setToDate(e.target.value)} style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 14, color: c.textPri, border: 'none', outline: 'none', background: 'transparent', width: '100%', padding: 0 }} />
+            </div>
+
+            <div style={{ height: 1, background: c.border }} />
+
+            {/* Reason */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+              <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 10, letterSpacing: '0.8px', textTransform: 'uppercase', color: c.textSec }}>REASON</span>
+              <textarea placeholder="Reason for document..." style={{ height: 100, border: `1px solid ${c.border}`, borderRadius: 8, padding: 12, background: c.white, fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: c.textPri, resize: 'none', outline: 'none', width: '100%', boxSizing: 'border-box' }} />
+            </div>
+          </div>
+        </div>
+
+        <div style={{ height: 1, background: c.border }} />
+      </div>
+
+      {/* Bottom action bar */}
+      <div style={{ flexShrink: 0, borderTop: `1px solid ${c.border}`, padding: '10px 24px', display: 'flex', justifyContent: 'flex-end', gap: 12, background: c.white }}>
+        <button onClick={() => { setProcessing(true); setTimeout(() => onSaveDraft?.(), 2000) }} className="transition-all duration-150 active:scale-[0.98]" style={{ height: 44, padding: '0 16px', border: `1.5px solid ${c.border}`, borderRadius: 8, background: c.white, cursor: 'pointer' }}>
+          <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.textPri }}>Save draft</span>
+        </button>
+        <button onClick={() => { setProcessing(true); setTimeout(() => onBackToRequests?.(), 2000) }} className="transition-all duration-150 active:scale-[0.98]" style={{ height: 44, padding: '0 24px', border: 'none', borderRadius: 8, background: 'linear-gradient(180deg, #245dcf 0%, #122f69 100%)', cursor: 'pointer' }}>
+          <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.white }}>Generate &amp; send</span>
+        </button>
+      </div>
+
+      {/* Processing overlay */}
+      {processing && (
+        <div className="animate-in fade-in duration-150" style={{ position: 'fixed', inset: 0, backdropFilter: 'blur(3px)', background: 'rgba(255,255,255,0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50 }}>
+          <div style={{ background: c.white, borderRadius: 12, padding: '14px 24px', boxShadow: '0 4px 24px rgba(0,0,0,0.12)', display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ width: 16, height: 16, borderRadius: '50%', border: `2px solid ${c.border}`, borderTopColor: c.blue, animation: 'spin 0.8s linear infinite', flexShrink: 0 }} />
+            <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 14, color: c.textPri }}>Processing...</span>
+          </div>
+        </div>
+      )}
+    </>
+  )
+}
+
+// ─── Offer slots view ──────────────────────────────────────────────────────────
+const DAYS  = ['Mon 16', 'Tue 17', 'Wed 18', 'Thu 19', 'Fri 20']
+const TIMES = ['9:00', '10:00', '10:30', '11:30', '14:00', '15:00', '16:30']
+const AVAILABLE = {
+  0: ['10:00', '14:00', '16:30'],
+  1: ['9:00', '11:30', '15:00'],
+  2: ['9:00', '10:00', '10:30', '11:30', '14:00', '15:00', '16:30'],
+  3: ['10:30', '14:00', '15:00'],
+  4: ['9:00', '10:00', '16:30'],
+}
+
+function OfferSlotsView({ row, onBack }) {
+  const [selected, setSelected] = useState(new Set())
+
+  function toggleSlot(key) {
+    setSelected(prev => {
+      const next = new Set(prev)
+      next.has(key) ? next.delete(key) : next.add(key)
+      return next
+    })
+  }
+
+  return (
+    <>
+      <div style={{ flex: 1, overflowY: 'auto', padding: '24px 32px', display: 'flex', flexDirection: 'column', gap: 24 }}>
+        <span onClick={onBack} className="transition-opacity duration-150 hover:opacity-70" style={{ fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: c.textSec, cursor: 'pointer' }}>← Back</span>
+
+        {/* Title */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 20, color: c.textPri }}>Select available slots</span>
+          <span style={{ fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: c.textSec }}>{row ? `Choose times to offer ${row.name}` : 'Manage your available slots'}</span>
+        </div>
+
+        <div style={{ height: 1, background: c.border }} />
+
+        {/* Duration navigator */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 12, color: c.textSec }}>Duration</span>
+          <div style={{ width: 358, background: c.surface, borderRadius: 8, display: 'flex', alignItems: 'center', padding: '4px 1px' }}>
+            <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px 0', cursor: 'pointer' }}>
+              <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 14, color: c.textPri }}>←</span>
+            </div>
+            <div style={{ flex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px 0' }}>
+              <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 12, color: c.textPri, whiteSpace: 'nowrap' }}>Week of Jun 16 – 22</span>
+            </div>
+            <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px 0', cursor: 'pointer' }}>
+              <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 14, color: c.textPri }}>→</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Grid */}
+        <div style={{ width: 900, border: `0.5px solid ${c.border}` }}>
+          {/* Day headers */}
+          <div style={{ display: 'flex' }}>
+            {DAYS.map((day, di) => (
+              <div key={day} style={{ width: 180, flexShrink: 0, padding: '12px 0', display: 'flex', justifyContent: 'center', background: di === 2 ? c.blue : c.surface, border: `0.5px solid ${c.border}` }}>
+                <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 10, letterSpacing: '0.8px', textTransform: 'uppercase', color: di === 2 ? c.white : c.textSec }}>{day}</span>
+              </div>
+            ))}
+          </div>
+          {/* Slot rows */}
+          {TIMES.map(time => (
+            <div key={time} style={{ display: 'flex' }}>
+              {DAYS.map((day, di) => {
+                const available = AVAILABLE[di].includes(time)
+                const key = `${di}-${time}`
+                const isSelected = selected.has(key)
+                return (
+                  <div
+                    key={day}
+                    onClick={() => available && toggleSlot(key)}
+                    className="transition-colors duration-150"
+                    style={{
+                      width: 180, flexShrink: 0, padding: '10px 0', display: 'flex', justifyContent: 'center', alignItems: 'center',
+                      background: isSelected ? c.blue : available ? c.surface : c.white,
+                      border: `0.5px solid ${c.border}`,
+                      cursor: available ? 'pointer' : 'default',
+                    }}
+                  >
+                    <span style={{ fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: isSelected ? c.white : available ? c.textPri : c.textSec }}>{available ? time : '—'}</span>
+                  </div>
+                )
+              })}
+            </div>
+          ))}
+        </div>
+
+        <div style={{ height: 1, background: c.border }} />
+      </div>
+
+      {/* Bottom action bar */}
+      <div style={{ flexShrink: 0, borderTop: `1px solid ${c.border}`, padding: '10px 24px', display: 'flex', justifyContent: 'flex-end', gap: 12, background: c.white }}>
+        <button onClick={onBack} className="transition-all duration-150 active:scale-[0.98]" style={{ height: 44, padding: '0 16px', border: `1.5px solid ${c.border}`, borderRadius: 8, background: c.white, cursor: 'pointer' }}>
+          <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.textPri }}>Cancel</span>
+        </button>
+        <button className="transition-all duration-150 active:scale-[0.98]" style={{ height: 44, padding: '0 24px', border: 'none', borderRadius: 8, background: 'linear-gradient(180deg, #245dcf 0%, #122f69 100%)', cursor: 'pointer' }}>
+          <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.white }}>Offer selected slots</span>
         </button>
       </div>
     </>
@@ -353,12 +630,16 @@ function DetailView({ row, onContact, onDecision }) {
 // ─── Recommendations view ──────────────────────────────────────────────────────
 const FOLLOW_UP_OPTIONS = ['3 days', '1 week', '2 weeks', 'If worsens']
 
-function RecommendationsView({ row, onBack }) {
-  const [followUp, setFollowUp] = useState('1 week')
+function RecommendationsView({ row, onBack, onSubmit, onSaveDraft }) {
+  const [followUp,   setFollowUp]   = useState('1 week')
+  const [diagnosis,  setDiagnosis]  = useState('')
+  const [steps,      setSteps]      = useState(['', '', ''])
+  const [notes,      setNotes]      = useState('')
+  const [processing, setProcessing] = useState(false)
   return (
     <>
       <div style={{ flex: 1, overflowY: 'auto', padding: '24px 32px', display: 'flex', flexDirection: 'column', gap: 16 }}>
-        <span onClick={onBack} style={{ fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: c.textSec, cursor: 'pointer' }}>← Back</span>
+        <span onClick={onBack} className="transition-opacity duration-150 hover:opacity-70" style={{ fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: c.textSec, cursor: 'pointer' }}>← Back</span>
 
         {/* Two-column layout */}
         <div style={{ display: 'flex', gap: 24, alignItems: 'flex-start' }}>
@@ -367,22 +648,18 @@ function RecommendationsView({ row, onBack }) {
           <div style={{ flex: 1, border: `1px solid ${c.border}`, borderRadius: 12, padding: 24, display: 'flex', flexDirection: 'column', gap: 16, background: c.white }}>
             {/* Diagnosis summary */}
             <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 10, letterSpacing: '0.8px', textTransform: 'uppercase', color: c.textSec }}>DIAGNOSIS SUMMARY</span>
-            <div style={{ height: 100, border: `1px solid ${c.border}`, borderRadius: 8, padding: 12, background: c.white }}>
-              <span style={{ fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: '#b2b2b8' }}>e.g. Viral upper respiratory infection</span>
-            </div>
+            <textarea value={diagnosis} onChange={e => setDiagnosis(e.target.value)} placeholder="e.g. Viral upper respiratory infection" style={{ height: 100, border: `1px solid ${c.border}`, borderRadius: 8, padding: 12, background: c.white, fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: c.textPri, resize: 'none', outline: 'none', width: '100%', boxSizing: 'border-box' }} />
 
             <div style={{ height: 1, background: c.border }} />
 
             {/* Next steps */}
             <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 10, letterSpacing: '0.8px', textTransform: 'uppercase', color: c.textSec }}>NEXT STEPS FOR PATIENT</span>
-            {[1, 2, 3].map(n => (
-              <div key={n} style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+            {[0, 1, 2].map(i => (
+              <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
                 <div style={{ width: 28, height: 28, borderRadius: 14, flexShrink: 0, border: `1px solid ${c.border}`, background: c.surface, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 12, color: c.textPri }}>{n}</span>
+                  <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 12, color: c.textPri }}>{i + 1}</span>
                 </div>
-                <div style={{ flex: 1, height: 38, border: `1px solid ${c.border}`, borderRadius: 8, background: c.surface, padding: '0 12px', display: 'flex', alignItems: 'center' }}>
-                  <span style={{ fontFamily: inter, fontWeight: 400, fontSize: 13, color: c.border }}>Add step {n}...</span>
-                </div>
+                <input value={steps[i]} onChange={e => { const s = [...steps]; s[i] = e.target.value; setSteps(s) }} placeholder={`Add step ${i + 1}...`} style={{ flex: 1, height: 38, border: `1px solid ${c.border}`, borderRadius: 8, background: c.surface, padding: '0 12px', fontFamily: inter, fontWeight: 400, fontSize: 13, color: c.textPri, outline: 'none', boxSizing: 'border-box' }} />
               </div>
             ))}
 
@@ -394,7 +671,7 @@ function RecommendationsView({ row, onBack }) {
               {FOLLOW_UP_OPTIONS.map(opt => {
                 const active = followUp === opt
                 return (
-                  <div key={opt} onClick={() => setFollowUp(opt)} style={{ padding: '6px 12px', borderRadius: 14, background: active ? c.blue : c.white, border: `1px solid ${active ? c.blue : c.border}`, cursor: 'pointer' }}>
+                  <div key={opt} onClick={() => setFollowUp(opt)} className="transition-colors duration-150" style={{ padding: '6px 12px', borderRadius: 14, background: active ? c.blue : c.white, border: `1px solid ${active ? c.blue : c.border}`, cursor: 'pointer' }}>
                     <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 12, color: active ? c.white : c.textSec }}>{opt}</span>
                   </div>
                 )
@@ -405,9 +682,7 @@ function RecommendationsView({ row, onBack }) {
 
             {/* Internal notes */}
             <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 10, letterSpacing: '0.8px', textTransform: 'uppercase', color: c.textSec }}>INTERNAL NOTES (not shown to patient)</span>
-            <div style={{ height: 100, border: `1px solid ${c.border}`, borderRadius: 8, padding: 12, background: c.white }}>
-              <span style={{ fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: '#b2b2b8' }}>Optional internal notes...</span>
-            </div>
+            <textarea value={notes} onChange={e => setNotes(e.target.value)} placeholder="Optional internal notes..." style={{ height: 100, border: `1px solid ${c.border}`, borderRadius: 8, padding: 12, background: c.white, fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: c.textPri, resize: 'none', outline: 'none', width: '100%', boxSizing: 'border-box' }} />
           </div>
 
           {/* Patient summary */}
@@ -439,13 +714,23 @@ function RecommendationsView({ row, onBack }) {
 
       {/* Bottom action bar */}
       <div style={{ flexShrink: 0, borderTop: `1px solid ${c.border}`, padding: '10px 24px', display: 'flex', justifyContent: 'flex-end', gap: 12, background: c.white }}>
-        <button style={{ height: 44, padding: '0 16px', border: `1.5px solid ${c.border}`, borderRadius: 8, background: c.white, cursor: 'pointer' }}>
+        <button onClick={() => { setProcessing(true); setTimeout(() => onSaveDraft?.(), 2000) }} className="transition-all duration-150 active:scale-[0.98]" style={{ height: 44, padding: '0 16px', border: `1.5px solid ${c.border}`, borderRadius: 8, background: c.white, cursor: 'pointer' }}>
           <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.textPri }}>Save draft</span>
         </button>
-        <button style={{ height: 44, padding: '0 16px', border: 'none', borderRadius: 8, background: 'linear-gradient(180deg, #245dcf 0%, #122f69 100%)', cursor: 'pointer', minWidth: 120 }}>
+        <button onClick={onSubmit} className="transition-all duration-150 active:scale-[0.98]" style={{ height: 44, padding: '0 16px', border: 'none', borderRadius: 8, background: 'linear-gradient(180deg, #245dcf 0%, #122f69 100%)', cursor: 'pointer', minWidth: 120 }}>
           <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.white }}>Submit</span>
         </button>
       </div>
+
+      {/* Processing overlay */}
+      {processing && (
+        <div className="animate-in fade-in duration-150" style={{ position: 'fixed', inset: 0, backdropFilter: 'blur(3px)', background: 'rgba(255,255,255,0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50 }}>
+          <div style={{ background: c.white, borderRadius: 12, padding: '14px 24px', boxShadow: '0 4px 24px rgba(0,0,0,0.12)', display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ width: 16, height: 16, borderRadius: '50%', border: `2px solid ${c.border}`, borderTopColor: c.blue, animation: 'spin 0.8s linear infinite', flexShrink: 0 }} />
+            <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 14, color: c.textPri }}>Processing...</span>
+          </div>
+        </div>
+      )}
     </>
   )
 }
@@ -458,11 +743,11 @@ const OUTCOMES = [
   { id: 'emergency',  label: 'Emergency referral',      sub: 'Refer to emergency services immediately' },
 ]
 
-function DecisionView({ onBack, onContinue }) {
+function DecisionView({ onBack, onContinue, onOfferSlots, onIssueDocument }) {
   const [selected, setSelected] = useState('self-care')
   return (
     <div style={{ flex: 1, overflowY: 'auto', padding: '24px 32px', display: 'flex', flexDirection: 'column', gap: 16 }}>
-      <span onClick={onBack} style={{ fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: c.textSec, cursor: 'pointer' }}>← Back to request</span>
+      <span onClick={onBack} className="transition-opacity duration-150 hover:opacity-70" style={{ fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: c.textSec, cursor: 'pointer' }}>← Back to request</span>
       {/* Centered card */}
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div style={{ width: 484, border: `1px solid ${c.border}`, borderRadius: 12, padding: 32, display: 'flex', flexDirection: 'column', gap: 16, background: c.white }}>
@@ -478,9 +763,9 @@ function DecisionView({ onBack, onContinue }) {
               return (
                 <div key={opt.id}>
                   {i > 0 && <div style={{ height: 1, background: c.border }} />}
-                  <div onClick={() => setSelected(opt.id)} style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '16px 0', cursor: 'pointer' }}>
+                  <div onClick={() => setSelected(opt.id)} className="transition-opacity duration-100 hover:opacity-80" style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '16px 0', cursor: 'pointer' }}>
                     {/* Radio */}
-                    <div style={{ width: 20, height: 20, borderRadius: 10, flexShrink: 0, border: `2px solid ${active ? c.blue : c.border}`, background: active ? c.blue : c.white, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div className="transition-colors duration-150" style={{ width: 20, height: 20, borderRadius: 10, flexShrink: 0, border: `2px solid ${active ? c.blue : c.border}`, background: active ? c.blue : c.white, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       {active && <div style={{ width: 8, height: 8, borderRadius: 4, background: c.white }} />}
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
@@ -494,10 +779,10 @@ function DecisionView({ onBack, onContinue }) {
           </div>
           {/* Actions */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <button onClick={() => selected === 'self-care' && onContinue?.()} style={{ height: 44, border: 'none', borderRadius: 8, background: 'linear-gradient(180deg, #245dcf 0%, #122f69 100%)', cursor: 'pointer', width: '100%' }}>
+            <button onClick={() => { if (selected === 'self-care') onContinue?.(); else if (selected === 'visit') onOfferSlots?.(); else if (selected === 'document') onIssueDocument?.(); }} className="transition-all duration-150 active:scale-[0.98]" style={{ height: 44, border: 'none', borderRadius: 8, background: 'linear-gradient(180deg, #245dcf 0%, #122f69 100%)', cursor: 'pointer', width: '100%' }}>
               <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.white }}>Continue</span>
             </button>
-            <button onClick={onBack} style={{ height: 44, border: `1.5px solid ${c.border}`, borderRadius: 8, background: c.white, cursor: 'pointer', width: '100%' }}>
+            <button onClick={onBack} className="transition-all duration-150 active:scale-[0.98]" style={{ height: 44, border: `1.5px solid ${c.border}`, borderRadius: 8, background: c.white, cursor: 'pointer', width: '100%' }}>
               <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.textPri }}>Cancel</span>
             </button>
           </div>
@@ -513,16 +798,18 @@ const QUICK_REPLIES = ['Any allergies?', 'How long exactly?', 'Any other symptom
 function MessagesView({ row }) {
   return (
     <div style={{ flex: 1, overflowY: 'auto', padding: '24px 32px', display: 'flex', flexDirection: 'column', gap: 16 }}>
-      <span onClick={() => history.back()} style={{ fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: c.textSec, cursor: 'pointer' }}>← Back</span>
+      <span onClick={() => history.back()} className="transition-opacity duration-150 hover:opacity-70" style={{ fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: c.textSec, cursor: 'pointer' }}>← Back</span>
 
       {/* Patient card */}
-      <div style={{ width: 358, height: 72, border: `1px solid ${c.border}`, borderRadius: 10, display: 'flex', alignItems: 'center', gap: 12, padding: '0 16px', background: c.white }}>
-        <PatientAvatar src={row.avatar} size={40} radius={22} />
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2, overflow: 'hidden' }}>
-          <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.textPri, whiteSpace: 'nowrap' }}>{row.name}</span>
-          <span style={{ fontFamily: inter, fontWeight: 400, fontSize: 11, lineHeight: '18px', color: c.textSec, whiteSpace: 'nowrap' }}>{row.type} · active</span>
+      {row && (
+        <div style={{ width: 358, height: 72, border: `1px solid ${c.border}`, borderRadius: 10, display: 'flex', alignItems: 'center', gap: 12, padding: '0 16px', background: c.white }}>
+          <PatientAvatar src={row.avatar} size={40} radius={22} />
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2, overflow: 'hidden' }}>
+            <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.textPri, whiteSpace: 'nowrap' }}>{row.name}</span>
+            <span style={{ fontFamily: inter, fontWeight: 400, fontSize: 11, lineHeight: '18px', color: c.textSec, whiteSpace: 'nowrap' }}>{row.type} · active</span>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Chat area */}
       <div style={{ width: 712, border: `1px solid ${c.border}`, borderRadius: 8, padding: 24, display: 'flex', flexDirection: 'column', gap: 16, minHeight: 300 }}>
@@ -541,7 +828,7 @@ function MessagesView({ row }) {
             <div style={{ maxWidth: 400, padding: '12px 16px', borderRadius: 12, background: c.surface, border: `1px solid ${c.border}` }}>
               <span style={{ fontFamily: inter, fontWeight: 400, fontSize: 14, color: c.textPri }}>Mostly continuous, gets worse at night.</span>
             </div>
-            <span style={{ fontFamily: inter, fontWeight: 400, fontSize: 11, color: c.textSec }}>{row.name.split(' ')[0]} · 10:35</span>
+            <span style={{ fontFamily: inter, fontWeight: 400, fontSize: 11, color: c.textSec }}>{row?.name?.split(' ')[0] ?? 'Patient'} · 10:35</span>
           </div>
         </div>
       </div>
@@ -551,7 +838,7 @@ function MessagesView({ row }) {
         <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 10, letterSpacing: '0.8px', textTransform: 'uppercase', color: c.textSec }}>QUICK REPLIES</span>
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
           {QUICK_REPLIES.map(r => (
-            <div key={r} style={{ padding: '4px 10px', borderRadius: 20, background: c.surface, border: `1px solid ${c.border}`, cursor: 'pointer' }}>
+            <div key={r} className="transition-all duration-150 active:scale-[0.97]" style={{ padding: '4px 10px', borderRadius: 20, background: c.surface, border: `1px solid ${c.border}`, cursor: 'pointer' }}>
               <span style={{ fontFamily: inter, fontWeight: 400, fontSize: 12, color: c.textPri }}>{r}</span>
             </div>
           ))}
@@ -563,7 +850,7 @@ function MessagesView({ row }) {
         <div style={{ flex: 1, height: 44, padding: '0 12px', background: c.surface, border: `1px solid ${c.border}`, borderRadius: 8, display: 'flex', alignItems: 'center' }}>
           <span style={{ fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: c.textSec }}>Type a message...</span>
         </div>
-        <button style={{ width: 135, height: 44, border: 'none', borderRadius: 8, background: 'linear-gradient(180deg, #245dcf 0%, #122f69 100%)', cursor: 'pointer' }}>
+        <button className="transition-all duration-150 active:scale-[0.98]" style={{ width: 135, height: 44, border: 'none', borderRadius: 8, background: 'linear-gradient(180deg, #245dcf 0%, #122f69 100%)', cursor: 'pointer' }}>
           <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.white }}>Send</span>
         </button>
       </div>
@@ -572,12 +859,18 @@ function MessagesView({ row }) {
 }
 
 // ─── Page ──────────────────────────────────────────────────────────────────────
-const TOP_BAR_TITLE = { list: 'Patient Requests', detail: 'Patient Requests', messages: 'Message Patient', decision: 'Close consultation', recommendations: 'Write Recommendations' }
-const ACTIVE_NAV    = { list: 'Requests', detail: 'Requests', messages: 'Messages', decision: 'Requests', recommendations: 'Requests' }
+const TOP_BAR_TITLE = { list: 'Patient Requests', detail: 'Patient Requests', messages: 'Message Patient', decision: 'Close consultation', recommendations: 'Write Recommendations', slots: 'Offer Appointment', issuedoc: 'Issue Document', closed: 'Done' }
+const ACTIVE_NAV    = { list: 'Requests', detail: 'Requests', messages: 'Messages', decision: 'Requests', recommendations: 'Requests', slots: 'Schedule', issuedoc: 'Requests', closed: 'Requests' }
 
-export default function SpecialistDashboardPage({ onBack, onLogout }) {
+export default function SpecialistDashboardPage({ onLogout }) {
   const [view, setView] = useState('list')
   const [selectedRow, setSelectedRow] = useState(null)
+  const [toast, setToast] = useState(null)
+
+  function showToast(title, description) {
+    setToast({ title, description })
+    setTimeout(() => setToast(null), 4000)
+  }
 
   function openDetail(row) {
     setSelectedRow(row)
@@ -600,6 +893,26 @@ export default function SpecialistDashboardPage({ onBack, onLogout }) {
     setView('recommendations')
   }
 
+  function openIssueDoc() {
+    history.pushState({ persona: 'specialist', specialistView: 'issuedoc' }, '')
+    setView('issuedoc')
+  }
+
+  function openSlots() {
+    history.pushState({ persona: 'specialist', specialistView: 'slots' }, '')
+    setView('slots')
+  }
+
+  function openClosed() {
+    history.pushState({ persona: 'specialist', specialistView: 'closed' }, '')
+    setView('closed')
+  }
+
+  function backToList() {
+    history.pushState({ persona: 'specialist' }, '')
+    setView('list')
+  }
+
   useEffect(() => {
     function onPop(e) {
       const sv = e.state?.specialistView
@@ -607,6 +920,9 @@ export default function SpecialistDashboardPage({ onBack, onLogout }) {
       else if (sv === 'messages')       setView('messages')
       else if (sv === 'decision')       setView('decision')
       else if (sv === 'recommendations') setView('recommendations')
+      else if (sv === 'issuedoc')        setView('issuedoc')
+      else if (sv === 'slots')          setView('slots')
+      else if (sv === 'closed')         setView('closed')
       else                              setView('list')
     }
     window.addEventListener('popstate', onPop)
@@ -615,18 +931,41 @@ export default function SpecialistDashboardPage({ onBack, onLogout }) {
 
   return (
     <div style={{ display: 'flex', height: '100dvh', fontFamily: inter, background: c.white, overflow: 'hidden' }}>
-      <Sidebar onLogout={onLogout} activeNav={ACTIVE_NAV[view]} />
+      <Sidebar onLogout={onLogout} activeNav={ACTIVE_NAV[view]} onNavClick={(label) => { if (label === 'Requests') backToList(); else if (label === 'Schedule') openSlots(); else if (label === 'Messages') openMessages() }} />
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, height: '100%' }}>
         {/* TopBar */}
         <div style={{ height: 64, flexShrink: 0, display: 'flex', alignItems: 'center', padding: '0 24px', borderBottom: `1px solid ${c.border}`, background: c.white }}>
           <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 20, color: c.textPri }}>{TOP_BAR_TITLE[view]}</span>
         </div>
-        {view === 'list'     && <ListView onView={openDetail} />}
-        {view === 'detail'   && <DetailView row={selectedRow} onContact={openMessages} onDecision={openDecision} />}
-        {view === 'messages' && <MessagesView row={selectedRow} />}
-        {view === 'decision'         && <DecisionView onBack={() => history.back()} onContinue={openRecommendations} />}
-        {view === 'recommendations'  && <RecommendationsView row={selectedRow} onBack={() => history.back()} />}
+        {/* View container — keyed so each view transition triggers fade-in */}
+        <div key={view} className="animate-in fade-in duration-200" style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'hidden' }}>
+          {view === 'list'     && <ListView onView={openDetail} />}
+          {view === 'detail'   && <DetailView row={selectedRow} onContact={openMessages} onDecision={openDecision} />}
+          {view === 'messages' && <MessagesView row={selectedRow} />}
+          {view === 'decision'         && <DecisionView onBack={() => history.back()} onContinue={openRecommendations} onOfferSlots={openSlots} onIssueDocument={openIssueDoc} />}
+          {view === 'issuedoc'         && <IssueDocumentView row={selectedRow} onBack={() => history.back()} onBackToRequests={() => { backToList(); showToast('Document generated successfully', 'The document has been sent to the patient.') }} onSaveDraft={() => { backToList(); showToast('Draft saved', 'You can continue editing this document later.') }} />}
+          {view === 'slots'            && <OfferSlotsView row={selectedRow} onBack={() => history.back()} />}
+          {view === 'recommendations'  && <RecommendationsView row={selectedRow} onBack={() => history.back()} onSubmit={openClosed} onSaveDraft={() => { backToList(); showToast('Draft saved', 'You can continue editing this document later.') }} />}
+          {view === 'closed'           && <ConsultationClosedView row={selectedRow} onBackToRequests={backToList} />}
+        </div>
       </div>
+
+      {/* Toast */}
+      {toast && (
+        <div className="animate-in slide-in-from-bottom-4 fade-in duration-300" style={{ position: 'fixed', bottom: 24, right: 24, zIndex: 200, width: 360, background: c.surface, border: `1px solid ${c.border}`, borderRadius: 10, padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 2, boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
+              <circle cx="8" cy="8" r="7" stroke="#1d9e75" strokeWidth="1.5" />
+              <path d="M5 8l2 2 4-4" stroke="#1d9e75" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.textPri }}>{toast.title}</span>
+          </div>
+          <div style={{ display: 'flex', gap: 12 }}>
+            <div style={{ width: 16, flexShrink: 0 }} />
+            <span style={{ fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: c.textPri }}>{toast.description}</span>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
