@@ -861,7 +861,7 @@ function MessagesView({ row }) {
 const TOP_BAR_TITLE = { list: 'Patient Requests', detail: 'Patient Requests', messages: 'Message Patient', decision: 'Close consultation', recommendations: 'Write Recommendations', slots: 'Offer Appointment', issuedoc: 'Issue Document', closed: 'Done' }
 const ACTIVE_NAV    = { list: 'Requests', detail: 'Requests', messages: 'Messages', decision: 'Requests', recommendations: 'Requests', slots: 'Schedule', issuedoc: 'Requests', closed: 'Requests' }
 
-export default function SpecialistDashboardPage({ onBack, onLogout }) {
+export default function SpecialistDashboardPage({ onLogout }) {
   const [view, setView] = useState('list')
   const [selectedRow, setSelectedRow] = useState(null)
   const [toast, setToast] = useState(null)

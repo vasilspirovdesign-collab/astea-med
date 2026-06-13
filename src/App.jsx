@@ -38,7 +38,7 @@ export default function App() {
   }
 
   if (persona === 'specialist') return (
-    <SpecialistDashboardPage onBack={goBack} onLogout={logout} />
+    <SpecialistDashboardPage onLogout={logout} />
   )
 
   return null
