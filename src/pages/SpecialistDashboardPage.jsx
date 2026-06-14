@@ -433,11 +433,8 @@ function IssueDocumentView({ row, onBack, onBackToRequests, onSaveDraft }) {
           </div>
         </div>
 
-        <div style={{ height: 1, background: c.border }} />
-
-        {/* Centered form card */}
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <div style={{ width: 484, border: `1px solid ${c.border}`, borderRadius: 8, padding: 32, display: 'flex', flexDirection: 'column', gap: 16 }}>
+        {/* Form card */}
+          <div style={{ width: 680, border: `1px solid ${c.border}`, borderRadius: 8, padding: 32, display: 'flex', flexDirection: 'column', gap: 16 }}>
 
             {/* Document type */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -495,9 +492,6 @@ function IssueDocumentView({ row, onBack, onBackToRequests, onSaveDraft }) {
               <textarea placeholder="Reason for document..." style={{ height: 100, border: `1px solid ${c.border}`, borderRadius: 8, padding: 12, background: c.white, fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: c.textPri, resize: 'none', outline: 'none', width: '100%', boxSizing: 'border-box' }} />
             </div>
           </div>
-        </div>
-
-        <div style={{ height: 1, background: c.border }} />
       </div>
 
       {/* Bottom action bar */}
@@ -743,7 +737,7 @@ const OUTCOMES = [
   { id: 'emergency',  label: 'Emergency referral',      sub: 'Refer to emergency services immediately' },
 ]
 
-function DecisionView({ onBack, onContinue, onOfferSlots, onIssueDocument }) {
+function DecisionView({ onBack, onContinue, onOfferSlots, onIssueDocument, onEmergency }) {
   const [selected, setSelected] = useState('self-care')
   return (
     <div style={{ flex: 1, overflowY: 'auto', padding: '24px 32px', display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -779,7 +773,7 @@ function DecisionView({ onBack, onContinue, onOfferSlots, onIssueDocument }) {
           </div>
           {/* Actions */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <button onClick={() => { if (selected === 'self-care') onContinue?.(); else if (selected === 'visit') onOfferSlots?.(); else if (selected === 'document') onIssueDocument?.(); }} className="transition-all duration-150 active:scale-[0.98]" style={{ height: 44, border: 'none', borderRadius: 8, background: 'linear-gradient(180deg, #245dcf 0%, #122f69 100%)', cursor: 'pointer', width: '100%' }}>
+            <button onClick={() => { if (selected === 'self-care') onContinue?.(); else if (selected === 'visit') onOfferSlots?.(); else if (selected === 'document') onIssueDocument?.(); else if (selected === 'emergency') onEmergency?.(); }} className="transition-all duration-150 active:scale-[0.98]" style={{ height: 44, border: 'none', borderRadius: 8, background: 'linear-gradient(180deg, #245dcf 0%, #122f69 100%)', cursor: 'pointer', width: '100%' }}>
               <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.white }}>Continue</span>
             </button>
             <button onClick={onBack} className="transition-all duration-150 active:scale-[0.98]" style={{ height: 44, border: `1.5px solid ${c.border}`, borderRadius: 8, background: c.white, cursor: 'pointer', width: '100%' }}>
@@ -789,6 +783,102 @@ function DecisionView({ onBack, onContinue, onOfferSlots, onIssueDocument }) {
         </div>
       </div>
     </div>
+  )
+}
+
+// ─── Emergency referral view ───────────────────────────────────────────────────
+const URGENCY_OPTIONS  = ['Immediate', 'Within 1h', 'Within 4h']
+const REFER_TO_OPTIONS = ['Emergency department (A&E)', 'Cardiology emergency', 'Neurology emergency']
+
+function EmergencyReferralView({ row, onBack, onSend }) {
+  const [urgency,    setUrgency]    = useState('Immediate')
+  const [referTo,    setReferTo]    = useState('Emergency department (A&E)')
+  const [reason,     setReason]     = useState('')
+  const [processing, setProcessing] = useState(false)
+  return (
+    <>
+      <div style={{ flex: 1, overflowY: 'auto', padding: '24px 32px', display: 'flex', flexDirection: 'column', gap: 24 }}>
+        <span onClick={onBack} className="transition-opacity duration-150 hover:opacity-70" style={{ fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: c.textSec, cursor: 'pointer' }}>← Back</span>
+
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <div style={{ width: 484, border: `1px solid ${c.border}`, borderRadius: 12, padding: 32, display: 'flex', flexDirection: 'column', gap: 16, background: c.white }}>
+
+            {/* Patient card */}
+            <div style={{ height: 72, border: `1px solid ${c.border}`, borderRadius: 10, display: 'flex', alignItems: 'center', gap: 12, padding: '0 16px', background: c.white }}>
+              <PatientAvatar src={row.avatar} size={40} radius={22} />
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2, overflow: 'hidden' }}>
+                <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.textPri, whiteSpace: 'nowrap' }}>{row.name}</span>
+                <span style={{ fontFamily: inter, fontWeight: 400, fontSize: 11, lineHeight: '18px', color: c.textSec, whiteSpace: 'nowrap' }}>{row.type} · active</span>
+              </div>
+            </div>
+
+            {/* Yellow tip */}
+            <div style={{ background: '#fff9e4', borderRadius: 12, padding: 16, display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.textPri }}>Emergency referral</span>
+              <span style={{ fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: c.textSec }}>Patient will be notified and directed immediately</span>
+            </div>
+
+            {/* Urgency level */}
+            <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 10, letterSpacing: '0.8px', textTransform: 'uppercase', color: c.textSec }}>URGENCY LEVEL</span>
+            <div style={{ display: 'flex', gap: 8 }}>
+              {URGENCY_OPTIONS.map(opt => {
+                const active = urgency === opt
+                return (
+                  <div key={opt} onClick={() => setUrgency(opt)} className="transition-colors duration-150" style={{ padding: '6px 12px', borderRadius: 14, background: active ? c.blue : c.white, border: `1px solid ${active ? c.blue : c.surface}`, cursor: 'pointer' }}>
+                    <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 12, color: active ? c.white : c.textSec }}>{opt}</span>
+                  </div>
+                )
+              })}
+            </div>
+
+            {/* Refer to */}
+            <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 10, letterSpacing: '0.8px', textTransform: 'uppercase', color: c.textSec }}>REFER TO</span>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              {REFER_TO_OPTIONS.map((opt, i) => {
+                const active = referTo === opt
+                return (
+                  <div key={opt}>
+                    {i > 0 && <div style={{ height: 1, background: c.border }} />}
+                    <div onClick={() => setReferTo(opt)} className="transition-opacity duration-100 hover:opacity-80" style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '16px 0', cursor: 'pointer' }}>
+                      <div className="transition-colors duration-150" style={{ width: 20, height: 20, borderRadius: 10, flexShrink: 0, border: `2px solid ${active ? c.blue : c.border}`, background: active ? c.blue : c.white, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        {active && <div style={{ width: 8, height: 8, borderRadius: 4, background: c.white }} />}
+                      </div>
+                      <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.textPri }}>{opt}</span>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+
+            {/* Reason for referral */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+              <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 10, letterSpacing: '0.8px', textTransform: 'uppercase', color: c.textSec }}>REASON FOR REFERRAL</span>
+              <textarea value={reason} onChange={e => setReason(e.target.value)} placeholder="Describe the clinical reason for emergency referral..." style={{ height: 100, border: `1px solid ${c.border}`, borderRadius: 8, padding: 12, background: c.white, fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: c.textPri, resize: 'none', outline: 'none', width: '100%', boxSizing: 'border-box' }} />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom action bar */}
+      <div style={{ flexShrink: 0, borderTop: `1px solid ${c.border}`, padding: '10px 24px', display: 'flex', justifyContent: 'flex-end', gap: 12, background: c.white }}>
+        <button onClick={onBack} className="transition-all duration-150 active:scale-[0.98]" style={{ height: 44, padding: '0 16px', border: `1.5px solid ${c.border}`, borderRadius: 8, background: c.white, cursor: 'pointer' }}>
+          <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.textPri }}>Cancel</span>
+        </button>
+        <button onClick={() => { setProcessing(true); setTimeout(() => onSend?.(), 2000) }} className="transition-all duration-150 active:scale-[0.98]" style={{ height: 44, padding: '0 24px', border: 'none', borderRadius: 8, background: 'linear-gradient(180deg, #245dcf 0%, #122f69 100%)', cursor: 'pointer' }}>
+          <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.white }}>Send emergency referral</span>
+        </button>
+      </div>
+
+      {/* Processing overlay */}
+      {processing && (
+        <div className="animate-in fade-in duration-150" style={{ position: 'fixed', inset: 0, backdropFilter: 'blur(3px)', background: 'rgba(255,255,255,0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50 }}>
+          <div style={{ background: c.white, borderRadius: 12, padding: '14px 24px', boxShadow: '0 4px 24px rgba(0,0,0,0.12)', display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ width: 16, height: 16, borderRadius: '50%', border: `2px solid ${c.border}`, borderTopColor: c.blue, animation: 'spin 0.8s linear infinite', flexShrink: 0 }} />
+            <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 14, color: c.textPri }}>Processing...</span>
+          </div>
+        </div>
+      )}
+    </>
   )
 }
 
@@ -859,8 +949,8 @@ function MessagesView({ row }) {
 }
 
 // ─── Page ──────────────────────────────────────────────────────────────────────
-const TOP_BAR_TITLE = { list: 'Patient Requests', detail: 'Patient Requests', messages: 'Message Patient', decision: 'Close consultation', recommendations: 'Write Recommendations', slots: 'Offer Appointment', issuedoc: 'Issue Document', closed: 'Done' }
-const ACTIVE_NAV    = { list: 'Requests', detail: 'Requests', messages: 'Messages', decision: 'Requests', recommendations: 'Requests', slots: 'Schedule', issuedoc: 'Requests', closed: 'Requests' }
+const TOP_BAR_TITLE = { list: 'Patient Requests', detail: 'Patient Requests', messages: 'Message Patient', decision: 'Close consultation', recommendations: 'Write Recommendations', slots: 'Offer Appointment', issuedoc: 'Issue Document', emergency: 'Emergency Referral', closed: 'Done' }
+const ACTIVE_NAV    = { list: 'Requests', detail: 'Requests', messages: 'Messages', decision: 'Requests', recommendations: 'Requests', slots: 'Schedule', issuedoc: 'Requests', emergency: 'Requests', closed: 'Requests' }
 
 export default function SpecialistDashboardPage({ onLogout }) {
   const [view, setView] = useState('list')
@@ -903,6 +993,11 @@ export default function SpecialistDashboardPage({ onLogout }) {
     setView('slots')
   }
 
+  function openEmergency() {
+    history.pushState({ persona: 'specialist', specialistView: 'emergency' }, '')
+    setView('emergency')
+  }
+
   function openClosed() {
     history.pushState({ persona: 'specialist', specialistView: 'closed' }, '')
     setView('closed')
@@ -922,6 +1017,7 @@ export default function SpecialistDashboardPage({ onLogout }) {
       else if (sv === 'recommendations') setView('recommendations')
       else if (sv === 'issuedoc')        setView('issuedoc')
       else if (sv === 'slots')          setView('slots')
+      else if (sv === 'emergency')      setView('emergency')
       else if (sv === 'closed')         setView('closed')
       else                              setView('list')
     }
@@ -942,7 +1038,8 @@ export default function SpecialistDashboardPage({ onLogout }) {
           {view === 'list'     && <ListView onView={openDetail} />}
           {view === 'detail'   && <DetailView row={selectedRow} onContact={openMessages} onDecision={openDecision} />}
           {view === 'messages' && <MessagesView row={selectedRow} />}
-          {view === 'decision'         && <DecisionView onBack={() => history.back()} onContinue={openRecommendations} onOfferSlots={openSlots} onIssueDocument={openIssueDoc} />}
+          {view === 'decision'         && <DecisionView onBack={() => history.back()} onContinue={openRecommendations} onOfferSlots={openSlots} onIssueDocument={openIssueDoc} onEmergency={openEmergency} />}
+          {view === 'emergency'        && <EmergencyReferralView row={selectedRow} onBack={() => history.back()} onSend={() => { backToList(); showToast('Emergency referral sent', 'The patient has been notified and directed to emergency services.') }} />}
           {view === 'issuedoc'         && <IssueDocumentView row={selectedRow} onBack={() => history.back()} onBackToRequests={() => { backToList(); showToast('Document generated successfully', 'The document has been sent to the patient.') }} onSaveDraft={() => { backToList(); showToast('Draft saved', 'You can continue editing this document later.') }} />}
           {view === 'slots'            && <OfferSlotsView row={selectedRow} onBack={() => history.back()} />}
           {view === 'recommendations'  && <RecommendationsView row={selectedRow} onBack={() => history.back()} onSubmit={openClosed} onSaveDraft={() => { backToList(); showToast('Draft saved', 'You can continue editing this document later.') }} />}
