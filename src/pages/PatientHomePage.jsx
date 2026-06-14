@@ -119,6 +119,231 @@ function Avatar({ src, initials, size = 40, radius }) {
   )
 }
 
+const SLOT_DAYS = [
+  { label: 'Wednesday, June 18', slots: [['9:00', '10:30', '11:00'], ['14:00', '15:30', '16:00']] },
+  { label: 'Thursday, June 19',  slots: [['9:00', '11:30', '13:00']] },
+]
+
+function AppointmentBookedView({ onHome, slot }) {
+  const slotLabel = slot ? slot.replace(/^[^-]+-/, '').replace('Wed', 'Wednesday, June 18').replace('Thu', 'Thursday, June 19') : 'Wednesday, June 18 – 10:30'
+
+  return (
+    <div className="animate-in fade-in duration-300" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+      {/* invisible navbar spacer */}
+      <div style={{ height: 52, flexShrink: 0 }} />
+
+      {/* Center content */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 16, paddingTop: 24, gap: 8 }}>
+        <div style={{ width: 72, height: 72, borderRadius: 40, border: '1px solid #209c8b', background: c.white, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginBottom: 4 }}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#209c8b" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />
+            <rect x="9" y="3" width="6" height="4" rx="1" />
+            <path d="m9 12 2 2 4-4" />
+          </svg>
+        </div>
+        <span style={L2({ color: c.textPri, textAlign: 'center' })}>Appointment booked</span>
+        <span style={L3({ color: c.textSec, whiteSpace: 'nowrap' })}>{slotLabel}</span>
+        <span style={L4({ color: c.textSec, whiteSpace: 'nowrap' })}>Dr. Ivanova – Room 3</span>
+        <div style={{ background: c.greenTint, border: `1px solid ${c.green}`, borderRadius: 4, padding: '3px 8px', marginTop: 4 }}>
+          <span style={L5({ color: c.green })}>Consultation closed</span>
+        </div>
+      </div>
+
+      {/* Bottom CTA */}
+      <div style={{ flexShrink: 0, padding: '0 16px 32px', background: c.white }}>
+        <button
+          className="transition-all duration-150 active:scale-[0.98]"
+          onClick={onHome}
+          style={{ width: '100%', height: 44, background: c.white, borderRadius: 8, border: `1.5px solid ${c.border}`, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        >
+          <span style={L2({ color: c.textPri, textAlign: 'center' })}>Back to home</span>
+        </button>
+      </div>
+    </div>
+  )
+}
+
+function BookAppointmentView({ onBack, onConfirm }) {
+  const [selected, setSelected] = useState('Wed-10:30')
+
+  return (
+    <>
+      {/* NavBar */}
+      <div style={{ height: 52, flexShrink: 0, display: 'flex', alignItems: 'center', paddingLeft: 12, paddingRight: 16, background: c.white }}>
+        <button
+          onClick={onBack}
+          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, flexShrink: 0 }}
+        >
+          <ArrowLeft size={16} strokeWidth={1.75} color={c.textPri} />
+        </button>
+        <span style={{ flex: 1, textAlign: 'center', ...L6({ color: c.textSec }) }}>BOOK APPOINTMENT</span>
+        <div style={{ width: 32, flexShrink: 0 }} />
+      </div>
+
+      {/* Scrollable content */}
+      <div className="no-scrollbar" style={{ flex: 1, overflowY: 'auto', padding: '16px', display: 'flex', flexDirection: 'column', gap: 24, scrollbarWidth: 'none' }}>
+        <span style={L2({ color: c.textPri })}>Dr. Ivanova – Available slots</span>
+
+        {SLOT_DAYS.map(({ label, slots }) => (
+          <div key={label} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <span style={L5({ color: c.textSec })}>{label}</span>
+            {slots.map((row, ri) => (
+              <div key={ri} style={{ background: c.surface, borderRadius: 8, padding: '4px', display: 'flex', gap: 2 }}>
+                {row.map(time => {
+                  const key = `${label.split(',')[0].slice(0,3)}-${time}`
+                  const active = selected === key
+                  return (
+                    <button
+                      key={time}
+                      onClick={() => setSelected(key)}
+                      className="transition-all duration-150"
+                      style={{ flex: 1, height: 34, borderRadius: 6, border: 'none', cursor: 'pointer', background: active ? c.blue : 'transparent', ...L5({ color: active ? c.white : c.textSec }) }}
+                    >
+                      {time}
+                    </button>
+                  )
+                })}
+              </div>
+            ))}
+          </div>
+        ))}
+
+        <div style={{ height: 4 }} />
+      </div>
+
+      {/* Bottom CTA */}
+      <div style={{ flexShrink: 0, padding: '0 16px 32px', background: c.white }}>
+        <button
+          className="transition-all duration-150 active:scale-[0.98]"
+          onClick={() => onConfirm(selected)}
+          style={{ width: '100%', height: 44, background: 'linear-gradient(180deg, #245dcf 0%, #122f69 100%)', borderRadius: 8, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        >
+          <span style={L2({ color: c.white, textAlign: 'center' })}>Confirm</span>
+        </button>
+      </div>
+    </>
+  )
+}
+
+function DoctorsReplyView({ onBack, onClose, onBookAppointment }) {
+  return (
+    <>
+      {/* NavBar */}
+      <div style={{ height: 52, flexShrink: 0, display: 'flex', alignItems: 'center', paddingLeft: 12, paddingRight: 16, background: c.white }}>
+        <button
+          onClick={onBack}
+          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, flexShrink: 0 }}
+        >
+          <ArrowLeft size={16} strokeWidth={1.75} color={c.textPri} />
+        </button>
+        <span style={{ flex: 1, textAlign: 'center', ...L6({ color: c.textSec }) }}>DOCTOR'S REPLY</span>
+        <div style={{ width: 32, flexShrink: 0 }} />
+      </div>
+
+      {/* Scrollable content */}
+      <div className="no-scrollbar" style={{ flex: 1, overflowY: 'auto', padding: '16px', display: 'flex', flexDirection: 'column', gap: 24, scrollbarWidth: 'none' }}>
+
+        {/* Dr. Ivanova card */}
+        <div style={{ ...card, borderRadius: 10, height: 72, display: 'flex', alignItems: 'center', gap: 12, padding: '0 16px' }}>
+          <Avatar src={avatarIvanova} size={40} radius={22} />
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2, overflow: 'hidden' }}>
+            <span style={{ ...L2({ color: c.textPri }), whiteSpace: 'nowrap' }}>Dr. Ivanova</span>
+            <span style={L4({ color: c.textSec, whiteSpace: 'nowrap' })}>General practice · Jun 18 · 10:30</span>
+          </div>
+        </div>
+
+        {/* Message bubble */}
+        <div style={{ background: c.surface, borderRadius: 12, padding: '14px 16px' }}>
+          <span style={L3({ color: c.textPri })}>Hello! Your symptoms describe a viral infection. I recommend rest, plenty of fluids and ibuprofen if needed.</span>
+        </div>
+
+        {/* Next steps */}
+        <div style={{ background: c.yellowTint, borderRadius: 12, padding: 16, display: 'flex', flexDirection: 'column', gap: 6 }}>
+          <span style={L2({ color: c.textPri })}>Next steps</span>
+          <ol style={{ margin: 0, paddingLeft: 20 }}>
+            {['Rest for 2–3 days', 'Ibuprofen 400mg when temperature exceeds 38 degrees', 'If symptoms worsen – book an appointment'].map((step, i) => (
+              <li key={i} style={{ ...L3({ color: c.textSec }), marginBottom: i < 2 ? 4 : 0 }}>{step}</li>
+            ))}
+          </ol>
+        </div>
+
+        {/* Consultation closed banner */}
+        <div style={{ background: c.surface, border: `1px solid ${c.border}`, borderRadius: 10, padding: '11px 15px', display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <span style={{ fontFamily: inter, fontWeight: 700, fontSize: 13, color: c.textPri }}>Consultation closed</span>
+          <span style={L4({ color: c.textSec })}>No physical visit required at this point</span>
+        </div>
+
+        <div style={{ height: 4 }} />
+      </div>
+
+      {/* Bottom CTA */}
+      <div style={{ flexShrink: 0, padding: '0 16px 32px', background: c.white, display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <button
+          className="transition-all duration-150 active:scale-[0.98]"
+          onClick={onBookAppointment}
+          style={{ width: '100%', height: 44, background: 'linear-gradient(180deg, #245dcf 0%, #122f69 100%)', borderRadius: 8, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        >
+          <span style={L2({ color: c.white, textAlign: 'center' })}>Book appointment</span>
+        </button>
+        <button
+          className="transition-all duration-150 active:scale-[0.98]"
+          onClick={onClose}
+          style={{ width: '100%', height: 44, background: c.white, borderRadius: 8, border: `1.5px solid ${c.border}`, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        >
+          <span style={L2({ color: c.textPri, textAlign: 'center' })}>Close</span>
+        </button>
+      </div>
+    </>
+  )
+}
+
+function NotificationsView({ onClose, onReply }) {
+  return (
+    <>
+      {/* NavBar */}
+      <div style={{ height: 52, flexShrink: 0, display: 'flex', alignItems: 'center', paddingLeft: 12, paddingRight: 16, background: c.white }}>
+        <button
+          onClick={onClose}
+          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, flexShrink: 0 }}
+        >
+          <ArrowLeft size={16} strokeWidth={1.75} color={c.textPri} />
+        </button>
+        <span style={{ flex: 1, textAlign: 'center', ...L6({ color: c.textSec }) }}>NOTIFICATIONS</span>
+        <div style={{ width: 32, flexShrink: 0 }} />
+      </div>
+
+      {/* Notification list */}
+      <div className="no-scrollbar" style={{ flex: 1, overflowY: 'auto', padding: '16px', scrollbarWidth: 'none' }}>
+        {/* Reply card */}
+        <div onClick={onReply} style={{ ...card, borderRadius: 8, display: 'flex', gap: 12, alignItems: 'center', padding: '8px 16px', cursor: 'pointer' }}>
+          {/* Message icon */}
+          <div style={{ width: 24, height: 24, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={c.green} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            </svg>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 2, flex: 1, overflow: 'hidden' }}>
+            <span style={L2({ color: c.textPri })}>New reply</span>
+            <span style={L3({ color: c.textSec })}>Dr. Ivanova replied to your consultation</span>
+            <span style={L4({ color: c.textSec })}>Just now</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom CTA */}
+      <div style={{ flexShrink: 0, padding: '0 16px 32px', background: c.white }}>
+        <button
+          className="transition-all duration-150 active:scale-[0.98]"
+          onClick={onClose}
+          style={{ width: '100%', height: 44, background: c.white, borderRadius: 8, border: `1.5px solid ${c.border}`, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        >
+          <span style={L2({ color: c.textPri, textAlign: 'center' })}>Close</span>
+        </button>
+      </div>
+    </>
+  )
+}
+
 function UploadFilesView({ onBack, onContinue, files, setFiles }) {
   function handleDrop(e) {
     e.preventDefault()
@@ -576,6 +801,8 @@ function RequestTypeView({ onBack, onConsultation }) {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function PatientHomePage({ onBack }) {
   const [view, setView] = useState('home')
+  const [hasNotification,    setHasNotification]    = useState(false)
+  const [bookedSlot,         setBookedSlot]         = useState(null)
   const [consultSymptoms,    setConsultSymptoms]    = useState(['Fever', 'Cough'])
   const [consultDuration,    setConsultDuration]    = useState('2–3 days')
   const [consultDescription, setConsultDescription] = useState('')
@@ -615,7 +842,15 @@ export default function PatientHomePage({ onBack }) {
                 <span style={{ fontFamily: quicksand, fontWeight: 700, fontSize: 15.2, letterSpacing: '1.27px', color: c.green, whiteSpace: 'nowrap' }}>MED</span>
               </div>
               <div style={{ flex: 1 }} />
-              <Bell size={20} strokeWidth={1.75} color={c.textPri} style={{ flexShrink: 0 }} />
+              <button
+                onClick={() => setView('notifications')}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}
+              >
+                <Bell size={20} strokeWidth={1.75} color={c.textPri} />
+                {hasNotification && (
+                  <span style={{ position: 'absolute', top: -2, right: -2, width: 8, height: 8, borderRadius: '50%', background: '#e53935', border: `1.5px solid ${c.white}` }} />
+                )}
+              </button>
             </div>
 
             {/* Divider */}
@@ -784,7 +1019,7 @@ export default function PatientHomePage({ onBack }) {
           <ReviewAndSendView
             onBack={() => setView('upload')}
             onEdit={() => setView('consultation')}
-            onSubmit={() => setView('success')}
+            onSubmit={() => { setView('success'); setHasNotification(true) }}
             symptoms={consultSymptoms}
             duration={consultDuration}
             description={consultDescription}
@@ -794,6 +1029,32 @@ export default function PatientHomePage({ onBack }) {
 
         {view === 'success' && (
           <SubmitSuccessView onHome={() => setView('home')} />
+        )}
+
+        {view === 'notifications' && (
+          <NotificationsView
+            onClose={() => { setView('home'); setHasNotification(false) }}
+            onReply={() => setView('doctorsreply')}
+          />
+        )}
+
+        {view === 'doctorsreply' && (
+          <DoctorsReplyView
+            onBack={() => setView('notifications')}
+            onClose={() => { setView('home'); setHasNotification(false) }}
+            onBookAppointment={() => setView('bookappointment')}
+          />
+        )}
+
+        {view === 'bookappointment' && (
+          <BookAppointmentView
+            onBack={() => setView('doctorsreply')}
+            onConfirm={(slot) => { setBookedSlot(slot); setView('appointmentbooked') }}
+          />
+        )}
+
+        {view === 'appointmentbooked' && (
+          <AppointmentBookedView slot={bookedSlot} onHome={() => setView('home')} />
         )}
 
       </div>
