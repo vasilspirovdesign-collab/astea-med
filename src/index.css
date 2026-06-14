@@ -136,6 +136,14 @@
     }
 }
 
+/* Hide native date picker icon so our custom calendar icon shows */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  display: none;
+}
+input[type="date"]::-webkit-inner-spin-button {
+  display: none;
+}
+
 /* Remove any stray borders/outlines on the splash screen */
 .splash-root, .splash-root * {
   border-width: 0 !important;
