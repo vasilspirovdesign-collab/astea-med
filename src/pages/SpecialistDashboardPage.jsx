@@ -433,11 +433,8 @@ function IssueDocumentView({ row, onBack, onBackToRequests, onSaveDraft }) {
           </div>
         </div>
 
-        <div style={{ height: 1, background: c.border }} />
-
-        {/* Centered form card */}
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <div style={{ width: 484, border: `1px solid ${c.border}`, borderRadius: 8, padding: 32, display: 'flex', flexDirection: 'column', gap: 16 }}>
+        {/* Form card */}
+          <div style={{ width: 680, border: `1px solid ${c.border}`, borderRadius: 8, padding: 32, display: 'flex', flexDirection: 'column', gap: 16 }}>
 
             {/* Document type */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -495,9 +492,6 @@ function IssueDocumentView({ row, onBack, onBackToRequests, onSaveDraft }) {
               <textarea placeholder="Reason for document..." style={{ height: 100, border: `1px solid ${c.border}`, borderRadius: 8, padding: 12, background: c.white, fontFamily: inter, fontWeight: 400, fontSize: 13, lineHeight: '18px', color: c.textPri, resize: 'none', outline: 'none', width: '100%', boxSizing: 'border-box' }} />
             </div>
           </div>
-        </div>
-
-        <div style={{ height: 1, background: c.border }} />
       </div>
 
       {/* Bottom action bar */}
