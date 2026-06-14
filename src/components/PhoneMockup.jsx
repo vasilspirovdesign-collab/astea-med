@@ -41,22 +41,7 @@ export default function PhoneMockup({ children }) {
           background: '#000',
           boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.08)',
         }}>
-          {/* Dynamic Island */}
-          <div style={{
-            position: 'absolute',
-            top: 12,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            width: 124,
-            height: 36,
-            background: '#000',
-            borderRadius: 20,
-            zIndex: 100,
-            pointerEvents: 'none',
-            boxShadow: '0 0 0 2px #000',
-          }} />
-
-          {/* App content */}
+{/* App content */}
           <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
             {children}
           </div>

@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { ArrowLeft, Bell, Plus, Archive, Users, ChevronRight } from 'lucide-react'
+import { ArrowLeft, Bell, Plus, Archive, Users, ChevronRight, Menu, LogOut, Settings, FileText, Calendar, X } from 'lucide-react'
 import avatarPatient from '../assets/avatar-patient.png'
 import avatarIvanova from '../assets/avatar-ivanova.png'
 import avatarPetrov from '../assets/avatar-petrov.png'
@@ -731,7 +731,177 @@ function ConsultationSymptomsView({ onBack, onContinue, symptoms, setSymptoms, d
   )
 }
 
-function RequestTypeView({ onBack, onConsultation }) {
+const DOC_TYPES = [
+  { id: 'sick-note',    title: 'Sick note',    sub: 'For employer or school' },
+  { id: 'referral',     title: 'Referral',     sub: 'To a specialist' },
+  { id: 'prescription', title: 'Prescription', sub: 'For Pharmacy' },
+  { id: 'other',        title: 'Other',        sub: 'Describe below' },
+]
+const ISSUED_TO = ['Employer', 'School / University', 'Other']
+
+function DocumentRequestView({ onBack }) {
+  const [docType,  setDocType]  = useState('sick-note')
+  const [duration, setDuration] = useState('2–3 days')
+  const [issuedTo, setIssuedTo] = useState('Employer')
+  const [from,     setFrom]     = useState('')
+  const [to,       setTo]       = useState('')
+  const [reason,   setReason]   = useState('')
+  const fromRef = useRef(null)
+  const toRef   = useRef(null)
+
+  return (
+    <>
+      {/* NavBar */}
+      <div style={{ height: 52, flexShrink: 0, display: 'flex', alignItems: 'center', paddingLeft: 12, paddingRight: 16, background: c.white }}>
+        <button
+          onClick={onBack}
+          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, flexShrink: 0 }}
+        >
+          <ArrowLeft size={16} strokeWidth={1.75} color={c.textPri} />
+        </button>
+        <span style={{ flex: 1, textAlign: 'center', ...L6({ color: c.textSec }) }}>NEW DOCUMENT</span>
+        <div style={{ width: 32, flexShrink: 0 }} />
+      </div>
+
+      {/* Scrollable content */}
+      <div className="no-scrollbar" style={{ flex: 1, overflowY: 'auto', padding: '20px 16px 0', display: 'flex', flexDirection: 'column', gap: 20, scrollbarWidth: 'none' }}>
+        <span style={L2({ color: c.textPri })}>Document request</span>
+
+        {/* Document type */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <span style={L5({ color: c.textSec })}>Document type</span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {[DOC_TYPES.slice(0, 2), DOC_TYPES.slice(2)].map((row, ri) => (
+              <div key={ri} style={{ display: 'flex', gap: 8 }}>
+                {row.map(dt => {
+                  const active = docType === dt.id
+                  return (
+                    <button
+                      key={dt.id}
+                      onClick={() => setDocType(dt.id)}
+                      className="transition-all duration-150"
+                      style={{
+                        flex: 1,
+                        height: 94,
+                        borderRadius: 8,
+                        border: active ? `2px solid ${c.blue}` : `1px solid ${c.border}`,
+                        background: c.white,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: 4,
+                        padding: '14px 16px',
+                      }}
+                    >
+                      <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 14, color: c.textPri }}>{dt.title}</span>
+                      <span style={L4({ color: c.textSec, textAlign: 'center' })}>{dt.sub}</span>
+                    </button>
+                  )
+                })}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Duration */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <span style={L5({ color: c.textSec })}>Duration</span>
+          <div style={{ background: c.surface, borderRadius: 8, padding: '4px', display: 'flex', gap: 2 }}>
+            {DURATION_OPTIONS.map(opt => {
+              const active = duration === opt
+              return (
+                <button
+                  key={opt}
+                  onClick={() => setDuration(opt)}
+                  className="transition-all duration-150"
+                  style={{ flex: 1, height: 34, borderRadius: 6, border: 'none', cursor: 'pointer', background: active ? c.blue : 'transparent', ...L5({ color: active ? c.white : c.textSec }) }}
+                >
+                  {opt}
+                </button>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* Sick note details */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <span style={L5({ color: c.textSec })}>Sick note details</span>
+          <div style={{ display: 'flex', gap: 8 }}>
+            {[{ label: 'From', val: from, set: setFrom, ref: fromRef }, { label: 'To', val: to, set: setTo, ref: toRef }].map(({ label, val, set, ref }) => (
+              <div key={label} style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
+                <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 14, lineHeight: '20px', color: c.textPri }}>{label}</span>
+                <div style={{ position: 'relative' }}>
+                  <input
+                    ref={ref}
+                    type="date"
+                    value={val}
+                    onChange={e => set(e.target.value)}
+                    style={{ height: 36, borderRadius: 8, border: `1px solid ${c.border}`, padding: '4px 36px 4px 12px', boxSizing: 'border-box', width: '100%', ...L3({ color: val ? c.textPri : c.textSec }), outline: 'none', fontFamily: inter, boxShadow: '0 1px 1px rgba(0,0,0,0.1)', WebkitAppearance: 'none', appearance: 'none' }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => ref.current?.showPicker()}
+                    style={{ position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center' }}
+                  >
+                    <Calendar size={14} strokeWidth={1.5} color={c.textSec} />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Reason */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <span style={L5({ color: c.textSec })}>Reason</span>
+          <textarea
+            value={reason}
+            onChange={e => setReason(e.target.value)}
+            placeholder="e.g Back pain, fever"
+            style={{ height: 100, borderRadius: 8, border: `1px solid ${c.border}`, padding: 12, resize: 'none', boxSizing: 'border-box', width: '100%', ...L3({ color: c.textPri }), outline: 'none', fontFamily: inter }}
+          />
+        </div>
+
+        {/* Issued to */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <span style={L5({ color: c.textSec })}>Issued to</span>
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+            {ISSUED_TO.map(opt => {
+              const active = issuedTo === opt
+              return (
+                <button
+                  key={opt}
+                  onClick={() => setIssuedTo(opt)}
+                  className="transition-all duration-150"
+                  style={{ padding: '6px 12px', borderRadius: 14, border: active ? 'none' : `1px solid ${c.border}`, background: active ? c.blue : c.white, cursor: 'pointer', ...L5({ color: active ? c.white : c.textSec }) }}
+                >
+                  {opt}
+                </button>
+              )
+            })}
+          </div>
+        </div>
+
+        <div style={{ height: 12 }} />
+      </div>
+
+      {/* Bottom CTA */}
+      <div style={{ flexShrink: 0, padding: '0 16px 32px', background: c.white, display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <button
+          className="transition-all duration-150 active:scale-[0.98]"
+          style={{ width: '100%', height: 44, background: 'linear-gradient(180deg, #245dcf 0%, #122f69 100%)', borderRadius: 8, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        >
+          <span style={L2({ color: c.white, textAlign: 'center' })}>Continue</span>
+        </button>
+        <span style={{ ...L5({ color: c.textSec }), textAlign: 'center' }}>A doctor will review and respond within 24h.</span>
+      </div>
+    </>
+  )
+}
+
+function RequestTypeView({ onBack, onConsultation, onDocument }) {
   const [selected, setSelected] = useState('consultation')
 
   return (
@@ -747,9 +917,6 @@ function RequestTypeView({ onBack, onConsultation }) {
         <span style={{ flex: 1, textAlign: 'center', ...L6({ color: c.textSec }) }}>NEW REQUEST</span>
         <div style={{ width: 32, flexShrink: 0 }} />
       </div>
-
-      {/* Divider */}
-      <div style={{ height: 1, background: c.border, flexShrink: 0 }} />
 
       {/* Content */}
       <div style={{ flex: 1, padding: '20px 16px 12px', display: 'flex', flexDirection: 'column', gap: 16, overflowY: 'auto' }}>
@@ -788,7 +955,7 @@ function RequestTypeView({ onBack, onConsultation }) {
       <div style={{ flexShrink: 0, padding: '12px 16px 32px', background: c.white, borderTop: `1px solid ${c.border}` }}>
         <button
           className="transition-all duration-150 active:scale-[0.98]"
-          onClick={() => { if (selected === 'consultation') onConsultation() }}
+          onClick={() => { if (selected === 'consultation') onConsultation(); else if (selected === 'document') onDocument() }}
           style={{ width: '100%', height: 44, background: 'linear-gradient(180deg, #245dcf 0%, #122f69 100%)', borderRadius: 8, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
         >
           <span style={L2({ color: c.white, textAlign: 'center' })}>Next</span>
@@ -801,6 +968,7 @@ function RequestTypeView({ onBack, onConsultation }) {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function PatientHomePage({ onBack }) {
   const [view, setView] = useState('home')
+  const [menuOpen,           setMenuOpen]           = useState(false)
   const [hasNotification,    setHasNotification]    = useState(false)
   const [bookedSlot,         setBookedSlot]         = useState(null)
   const [consultSymptoms,    setConsultSymptoms]    = useState(['Fever', 'Cough'])
@@ -811,7 +979,7 @@ export default function PatientHomePage({ onBack }) {
   const newsDrag        = useDragScroll()
 
   return (
-    <div style={{ width: '100%', height: '100%', background: c.white, display: 'flex', flexDirection: 'column', fontFamily: inter }}>
+    <div style={{ width: '100%', height: '100%', background: c.white, display: 'flex', flexDirection: 'column', fontFamily: inter, position: 'relative' }}>
 
       {/* Status Bar — always visible */}
       <div style={{ height: 54, flexShrink: 0, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', paddingBottom: 8 }}>
@@ -833,8 +1001,8 @@ export default function PatientHomePage({ onBack }) {
           <>
             {/* NavBar */}
             <div style={{ height: 52, flexShrink: 0, display: 'flex', alignItems: 'center', paddingLeft: 12, paddingRight: 16, background: c.white }}>
-              <button onClick={onBack} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <ArrowLeft size={24} strokeWidth={1.75} color={c.textPri} />
+              <button onClick={() => setMenuOpen(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <Menu size={24} strokeWidth={1.75} color={c.textPri} />
               </button>
               <div style={{ flex: 1 }} />
               <div style={{ display: 'flex', gap: 3.4, alignItems: 'center' }}>
@@ -852,9 +1020,6 @@ export default function PatientHomePage({ onBack }) {
                 )}
               </button>
             </div>
-
-            {/* Divider */}
-            <div style={{ height: 1, background: c.border, flexShrink: 0 }} />
 
             {/* Scrollable content */}
             <div className="no-scrollbar" style={{ flex: 1, overflowY: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
@@ -990,7 +1155,11 @@ export default function PatientHomePage({ onBack }) {
         )}
 
         {view === 'newrequest' && (
-          <RequestTypeView onBack={() => setView('home')} onConsultation={() => setView('consultation')} />
+          <RequestTypeView onBack={() => setView('home')} onConsultation={() => setView('consultation')} onDocument={() => setView('document')} />
+        )}
+
+        {view === 'document' && (
+          <DocumentRequestView onBack={() => setView('newrequest')} />
         )}
 
         {view === 'consultation' && (
@@ -1058,6 +1227,64 @@ export default function PatientHomePage({ onBack }) {
         )}
 
       </div>
+
+      {/* Mobile menu drawer */}
+      {menuOpen && (
+        <>
+          {/* Backdrop */}
+          <div
+            onClick={() => setMenuOpen(false)}
+            style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 200 }}
+          />
+          {/* Drawer */}
+          <div
+            className="animate-in slide-in-from-left duration-250"
+            style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: 280, background: c.white, zIndex: 201, display: 'flex', flexDirection: 'column' }}
+          >
+            {/* Header */}
+            <div style={{ padding: '20px 16px 16px', borderBottom: `1px solid ${c.border}`, display: 'flex', alignItems: 'center', gap: 12 }}>
+              <Avatar src={avatarPatient} size={44} radius={24} />
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2, overflow: 'hidden' }}>
+                <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 15, color: c.textPri, whiteSpace: 'nowrap' }}>Peter Ivanov</span>
+                <span style={L4({ color: c.textSec })}>Patient</span>
+              </div>
+              <button onClick={() => setMenuOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, flexShrink: 0 }}>
+                <X size={18} strokeWidth={1.75} color={c.textSec} />
+              </button>
+            </div>
+
+            {/* Nav items */}
+            <div style={{ flex: 1, overflowY: 'auto', padding: '8px 0' }}>
+              {[
+                { icon: <FileText size={18} strokeWidth={1.5} color={c.textSec} />,  label: 'My Records' },
+                { icon: <Calendar  size={18} strokeWidth={1.5} color={c.textSec} />,  label: 'Appointments' },
+                { icon: <Archive   size={18} strokeWidth={1.5} color={c.textSec} />,  label: 'Prescriptions' },
+                { icon: <Users     size={18} strokeWidth={1.5} color={c.textSec} />,  label: 'My Specialists' },
+                { icon: <Settings  size={18} strokeWidth={1.5} color={c.textSec} />,  label: 'Settings' },
+              ].map(({ icon, label }) => (
+                <button
+                  key={label}
+                  style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 14, padding: '14px 20px', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left' }}
+                >
+                  {icon}
+                  <span style={L3({ color: c.textPri })}>{label}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* Logout */}
+            <div style={{ borderTop: `1px solid ${c.border}`, padding: '8px 0 32px' }}>
+              <button
+                onClick={onBack}
+                style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 14, padding: '14px 20px', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left' }}
+              >
+                <LogOut size={18} strokeWidth={1.5} color="#e53935" />
+                <span style={L3({ color: '#e53935' })}>Log out</span>
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   )
 }
