@@ -4,7 +4,7 @@ import avatarPatient from '../assets/avatar-patient.png'
 import avatarIvanova from '../assets/avatar-ivanova.png'
 import avatarPetrov from '../assets/avatar-petrov.png'
 import avatarGeorgieva from '../assets/avatar-georgieva.png'
-import avatarDimitrov from '../assets/avatar-1.png'
+import avatarDimitrov from '../assets/avatar-dimitrov.png'
 
 // ─── Design tokens ────────────────────────────────────────────────────────────
 const c = {
