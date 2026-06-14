@@ -39,11 +39,11 @@ export default function SplashPage({ onSelect }) {
     <div className="animate-in fade-in duration-500" style={{ ...base, position: 'relative', display: 'flex', height: '100dvh', flexDirection: 'column', overflow: 'hidden', background: '#f3f3f3' }}>
 
       {/* Brand */}
-      <div style={{ ...base, flexShrink: 0, padding: 'clamp(16px, 3vw, 40px) clamp(24px, 5vw, 64px) 0', display: 'flex', alignItems: 'center', gap: 'clamp(8px, 1vw, 15px)' }}>
-        <img src={logoIcon} alt="" style={{ width: 'clamp(28px, 4vw, 76px)', height: 'clamp(28px, 4vw, 76px)', display: 'block', flexShrink: 0 }} />
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'clamp(4px, 0.6vw, 10px)' }}>
-          <span style={{ fontFamily: quicksand, fontWeight: 700, fontSize: 'clamp(16px, 2.5vw, 45.6px)', letterSpacing: 'clamp(1px, 0.25vw, 3.8px)', color: '#0c447c', lineHeight: 1 }}>ASTEA</span>
-          <span style={{ fontFamily: quicksand, fontWeight: 700, fontSize: 'clamp(16px, 2.5vw, 45.6px)', letterSpacing: 'clamp(1px, 0.25vw, 3.8px)', color: '#1d9e75', lineHeight: 1 }}>MED</span>
+      <div style={{ ...base, flexShrink: 0, padding: 'clamp(16px, 3vw, 40px) clamp(24px, 5vw, 64px) 0', display: 'flex', alignItems: 'center', gap: 'clamp(8px, 1.06vw, 15.2px)' }}>
+        <img src={logoIcon} alt="" style={{ width: 'clamp(32px, 5.28vw, 76px)', height: 'clamp(32px, 5.28vw, 76px)', display: 'block', flexShrink: 0 }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'clamp(4px, 0.7vw, 10.1px)' }}>
+          <span style={{ fontFamily: quicksand, fontWeight: 700, fontSize: 'clamp(16px, 3.17vw, 45.6px)', letterSpacing: 'clamp(1px, 0.26vw, 3.8px)', color: '#0c447c', lineHeight: 1 }}>ASTEA</span>
+          <span style={{ fontFamily: quicksand, fontWeight: 700, fontSize: 'clamp(16px, 3.17vw, 45.6px)', letterSpacing: 'clamp(1px, 0.26vw, 3.8px)', color: '#1d9e75', lineHeight: 1 }}>MED</span>
         </div>
       </div>
 
