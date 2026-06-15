@@ -528,8 +528,9 @@ const AVAILABLE = {
   4: ['9:00', '10:00', '16:30'],
 }
 
-function OfferSlotsView({ row, onBack }) {
-  const [selected, setSelected] = useState(new Set())
+function OfferSlotsView({ row, onBack, onOfferSlots }) {
+  const [selected,   setSelected]   = useState(new Set())
+  const [processing, setProcessing] = useState(false)
 
   function toggleSlot(key) {
     setSelected(prev => {
@@ -613,10 +614,20 @@ function OfferSlotsView({ row, onBack }) {
         <button onClick={onBack} className="transition-all duration-150 active:scale-[0.98]" style={{ height: 44, padding: '0 16px', border: `1.5px solid ${c.border}`, borderRadius: 8, background: c.white, cursor: 'pointer' }}>
           <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.textPri }}>Cancel</span>
         </button>
-        <button className="transition-all duration-150 active:scale-[0.98]" style={{ height: 44, padding: '0 24px', border: 'none', borderRadius: 8, background: 'linear-gradient(180deg, #245dcf 0%, #122f69 100%)', cursor: 'pointer' }}>
+        <button onClick={() => { setProcessing(true); setTimeout(() => onOfferSlots?.(), 2000) }} className="transition-all duration-150 active:scale-[0.98]" style={{ height: 44, padding: '0 24px', border: 'none', borderRadius: 8, background: 'linear-gradient(180deg, #245dcf 0%, #122f69 100%)', cursor: 'pointer' }}>
           <span style={{ fontFamily: quicksand, fontWeight: 600, fontSize: 16, lineHeight: '20px', color: c.white }}>Offer selected slots</span>
         </button>
       </div>
+
+      {/* Processing overlay */}
+      {processing && (
+        <div className="animate-in fade-in duration-150" style={{ position: 'fixed', inset: 0, backdropFilter: 'blur(3px)', background: 'rgba(255,255,255,0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50 }}>
+          <div style={{ background: c.white, borderRadius: 12, padding: '14px 24px', boxShadow: '0 4px 24px rgba(0,0,0,0.12)', display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ width: 16, height: 16, borderRadius: '50%', border: `2px solid ${c.border}`, borderTopColor: c.blue, animation: 'spin 0.8s linear infinite', flexShrink: 0 }} />
+            <span style={{ fontFamily: inter, fontWeight: 500, fontSize: 14, color: c.textPri }}>Processing...</span>
+          </div>
+        </div>
+      )}
     </>
   )
 }
@@ -1041,7 +1052,7 @@ export default function SpecialistDashboardPage({ onLogout }) {
           {view === 'decision'         && <DecisionView onBack={() => history.back()} onContinue={openRecommendations} onOfferSlots={openSlots} onIssueDocument={openIssueDoc} onEmergency={openEmergency} />}
           {view === 'emergency'        && <EmergencyReferralView row={selectedRow} onBack={() => history.back()} onSend={() => { backToList(); showToast('Emergency referral sent', 'The patient has been notified and directed to emergency services.') }} />}
           {view === 'issuedoc'         && <IssueDocumentView row={selectedRow} onBack={() => history.back()} onBackToRequests={() => { backToList(); showToast('Document generated successfully', 'The document has been sent to the patient.') }} onSaveDraft={() => { backToList(); showToast('Draft saved', 'You can continue editing this document later.') }} />}
-          {view === 'slots'            && <OfferSlotsView row={selectedRow} onBack={() => history.back()} />}
+          {view === 'slots'            && <OfferSlotsView row={selectedRow} onBack={() => history.back()} onOfferSlots={() => { backToList(); showToast('Slots sent to patient', 'Peter Ivanov will be notified and can book one of the offered times.') }} />}
           {view === 'recommendations'  && <RecommendationsView row={selectedRow} onBack={() => history.back()} onSubmit={openClosed} onSaveDraft={() => { backToList(); showToast('Draft saved', 'You can continue editing this document later.') }} />}
           {view === 'closed'           && <ConsultationClosedView row={selectedRow} onBackToRequests={backToList} />}
         </div>
